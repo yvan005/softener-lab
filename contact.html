@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Softener Lab</title>
+</head>
+<body>
+
+<header id="site-header"></header>
+
+<section class="page-header">
+  <div class="wrap">
+    <div class="eyebrow-line"><span class="dot"></span> CONTACT</div>
+    <h1>Discutons de votre projet</h1>
+    <p>Décrivez votre besoin, nous revenons vers vous avec un devis sous 48 heures.</p>
+  </div>
+</section>
+
+<section class="form-section">
+  <div class="wrap">
+    <form class="form-box">
+      <div class="form-row">
+        <label for="name">Nom complet</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-row">
+        <label for="company">Entreprise</label>
+        <input type="text" id="company" name="company">
+      </div>
+      <div class="form-row">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-row">
+        <label for="service">Service concerné</label>
+        <select id="service" name="service">
+          <option>Formations</option>
+          <option>Design & infographie</option>
+          <option>Développement d'applications</option>
+          <option>Cybersécurité</option>
+          <option>Flyers & templates</option>
+          <option>Autre / plusieurs services</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="message">Décrivez votre besoin</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Envoyer la demande</button>
+    </form>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+*.log
+
+# Ne jamais committer tes vrais identifiants une fois remplis :
+# fais une copie locale de ces fichiers avec tes vraies valeurs, et ajoute-les ici si tu veux les exclure du suivi Git.
