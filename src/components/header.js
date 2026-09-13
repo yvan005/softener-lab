@@ -16,7 +16,11 @@ export function renderHeader() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
           <div class="simple-menu">
-            <a href="/formations.html">Photoshop, InDesign, montage vidéo, cybersécurité.</a>
+            <a href="/photoshop-fondamentaux.html">Photoshop — Fondamentaux</a>
+            <a href="/indesign-mise-en-page.html">InDesign — Mise en page</a>
+            <a href="/montage-video.html">Montage vidéo</a>
+            <a href="/cybersecurite-bases.html">Cybersécurité — Les bases</a>
+            <a href="/cybersecurite-audit.html">Cybersécurité — Audit & pentest</a>
           </div>
         </div>
 
@@ -26,7 +30,9 @@ export function renderHeader() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
           <div class="simple-menu">
-            <a href="/design.html">Identité visuelle, supports imprimés et digitaux.</a>
+            <a href="/identite-visuelle.html">Identité visuelle</a>
+            <a href="/supports-imprimes.html">Supports imprimés</a>
+            <a href="/creation-video.html">Création vidéo</a>
           </div>
         </div>
 
@@ -36,7 +42,9 @@ export function renderHeader() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
           <div class="simple-menu">
-            <a href="/developpement.html">Web, mobile et logiciels métier sur mesure.</a>
+            <a href="/applications-web.html">Applications web</a>
+            <a href="/applications-mobiles.html">Applications mobiles</a>
+            <a href="/logiciels-metier.html">Logiciels métier</a>
           </div>
         </div>
 
@@ -46,7 +54,10 @@ export function renderHeader() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
           <div class="simple-menu">
-            <a href="/cybersecurite.html">Audits, tests d'intrusion, accompagnement.</a>
+            <a href="/audit-securite.html">Audit de sécurité</a>
+            <a href="/test-intrusion.html">Test d'intrusion</a>
+            <a href="/sensibilisation-equipes.html">Sensibilisation des équipes</a>
+            <a href="/accompagnement-continu.html">Accompagnement continu</a>
           </div>
         </div>
 
@@ -56,7 +67,9 @@ export function renderHeader() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
           <div class="simple-menu">
-            <a href="/flyers.html">Modèles prêts à l'emploi ou créations sur mesure.</a>
+            <a href="/modele-evenementiel.html">Modèle Événementiel</a>
+            <a href="/modele-promotion.html">Modèle Promotion</a>
+            <a href="/modele-annonce.html">Modèle Annonce</a>
           </div>
         </div>
 
