@@ -10,6 +10,8 @@ function mountLayout() {
 }
 
 function initNavDropdowns() {
+  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
   document.querySelectorAll('.nav-item').forEach((item) => {
     const btn = item.querySelector('button');
     if (!btn) return;
@@ -29,8 +31,13 @@ function initNavDropdowns() {
       btn.setAttribute('aria-expanded', 'false');
     };
 
-    item.addEventListener('mouseenter', open);
-    item.addEventListener('mouseleave', close);
+    // Le survol n'ouvre le menu que sur les appareils avec une vraie souris.
+    // Sur tactile, le premier tap simule un mouseenter, ce qui obligerait
+    // à taper deux fois avant que le clic ne soit pris en compte.
+    if (supportsHover) {
+      item.addEventListener('mouseenter', open);
+      item.addEventListener('mouseleave', close);
+    }
     btn.addEventListener('click', () => {
       item.classList.contains('open') ? close() : open();
     });

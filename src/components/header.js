@@ -55,7 +55,6 @@ export function renderHeader() {
             <a href="/contact.html">Contact</a>
           </div>
         </div>
-        <a href="/contact.html">Tarifs</a>
         <div class="nav-item" data-nav="account">
           <button type="button" aria-expanded="false">
             Compte
