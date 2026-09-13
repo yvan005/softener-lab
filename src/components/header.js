@@ -10,11 +10,55 @@ export function renderHeader() {
         Softener Lab
       </a>
       <div class="nav-links">
-        <a href="/formations.html">Formations</a>
-        <a href="/design.html">Design</a>
-        <a href="/developpement.html">Développement</a>
-        <a href="/cybersecurite.html">Cybersécurité</a>
-        <a href="/flyers.html">Flyers</a>
+        <div class="nav-item" data-nav="formations">
+          <button type="button" aria-expanded="false">
+            Formations
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+          <div class="simple-menu">
+            <a href="/formations.html">Photoshop, InDesign, montage vidéo, cybersécurité.</a>
+          </div>
+        </div>
+
+        <div class="nav-item" data-nav="design">
+          <button type="button" aria-expanded="false">
+            Design
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+          <div class="simple-menu">
+            <a href="/design.html">Identité visuelle, supports imprimés et digitaux.</a>
+          </div>
+        </div>
+
+        <div class="nav-item" data-nav="developpement">
+          <button type="button" aria-expanded="false">
+            Développement
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+          <div class="simple-menu">
+            <a href="/developpement.html">Web, mobile et logiciels métier sur mesure.</a>
+          </div>
+        </div>
+
+        <div class="nav-item" data-nav="cybersecurite">
+          <button type="button" aria-expanded="false">
+            Cybersécurité
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+          <div class="simple-menu">
+            <a href="/cybersecurite.html">Audits, tests d'intrusion, accompagnement.</a>
+          </div>
+        </div>
+
+        <div class="nav-item" data-nav="flyers">
+          <button type="button" aria-expanded="false">
+            Flyers
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+          <div class="simple-menu">
+            <a href="/flyers.html">Modèles prêts à l'emploi ou créations sur mesure.</a>
+          </div>
+        </div>
 
         <div class="nav-item" data-nav="about">
           <button type="button" aria-expanded="false">
