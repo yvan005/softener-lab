@@ -10,11 +10,11 @@ export function renderHeader() {
         Softener Lab
       </a>
       <div class="nav-links">
-        <a href="/formations.html">Formations</a>
-        <a href="/design.html">Design</a>
-        <a href="/developpement.html">Développement</a>
-        <a href="/cybersecurite.html">Cybersécurité</a>
-        <a href="/flyers.html">Flyers</a>
+        <a href="/formations.html" data-tooltip="Photoshop, InDesign, montage vidéo, cybersécurité.">Formations</a>
+        <a href="/design.html" data-tooltip="Identité visuelle, supports imprimés et digitaux.">Design</a>
+        <a href="/developpement.html" data-tooltip="Web, mobile et logiciels métier sur mesure.">Développement</a>
+        <a href="/cybersecurite.html" data-tooltip="Audits, tests d'intrusion, accompagnement.">Cybersécurité</a>
+        <a href="/flyers.html" data-tooltip="Modèles prêts à l'emploi ou créations sur mesure.">Flyers</a>
 
         <div class="nav-item" data-nav="about">
           <button type="button" aria-expanded="false">
