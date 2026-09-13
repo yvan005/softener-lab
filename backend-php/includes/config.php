@@ -2,7 +2,7 @@
 // includes/config.php
 
 // Adresse complète de ton site une fois en ligne (sans slash final)
-define('SITE_URL', 'http://tonsite.infinityfreeapp.com');
+define('SITE_URL', 'http://softenerlab.freepage.cc');
 
 // --- Configuration SMTP (Gmail utilisé en exemple) ---
 // InfinityFree bloque la fonction mail() de PHP : il faut passer par un SMTP externe.

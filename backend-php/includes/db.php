@@ -3,10 +3,10 @@
 // Remplis ces 4 valeurs avec celles données par InfinityFree
 // (panneau > MySQL Databases). L'hôte est presque toujours "sqlXXX.infinityfree.com".
 
-$DB_HOST = 'sqlXXX.infinityfree.com';
-$DB_NAME = 'epiz_XXXXXXXX_softenerlab';
-$DB_USER = 'epiz_XXXXXXXX';
-$DB_PASS = 'change-moi';
+$DB_HOST = 'sql109.infinityfree.com';
+$DB_NAME = 'if0_42901352_db_softener';
+$DB_USER = 'if0_42901352';
+$DB_PASS = 'TON_MOT_DE_PASSE_VPANEL'; // remplace par ton mot de passe vPanel InfinityFree
 
 try {
     $pdo = new PDO(
