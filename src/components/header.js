@@ -66,6 +66,7 @@ export function renderHeader() {
             <a href="/register.php">Créer un compte</a>
           </div>
         </div>
+        <a href="/contact.html" class="nav-cta nav-cta--mobile">Discuter d'un projet</a>
       </div>
       <button type="button" class="burger" id="burger-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
         <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
@@ -74,7 +75,7 @@ export function renderHeader() {
           <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" stroke-width="2"/>
         </svg>
       </button>
-      <a href="/contact.html" class="nav-cta">Discuter d'un projet</a>
+      <a href="/contact.html" class="nav-cta nav-cta--desktop">Discuter d'un projet</a>
     </nav>
   </div>
   `;
