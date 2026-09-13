@@ -105,12 +105,20 @@ nav{
 .simple-menu a{display:block; padding:9px 12px; border-radius:4px; font-size:0.9rem; color:var(--muted);}
 .simple-menu a:hover{background:var(--panel-2); color:var(--text);}
 
-.nav-cta{
-  font-size:0.9rem; padding:10px 20px; border:1px solid var(--green-dim);
-  border-radius:3px; color:var(--green); transition:all .15s ease;
+.nav-item[data-nav="account"] > button{
+  flex-direction:column; gap:3px; padding:8px 12px;
 }
-.nav-cta:hover{background:var(--green); color:var(--ink); border-color:var(--green);}
-.nav-cta--mobile{display:none;}
+.account-avatar{
+  width:26px; height:26px; border-radius:50%;
+  background:var(--panel-2); color:var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  transition:background .15s ease, color .15s ease;
+}
+.account-avatar--active{
+  background:var(--green); color:var(--ink);
+}
+.account-initial{font-family:var(--display); font-weight:600; font-size:0.78rem;}
+.account-name{font-size:0.7rem; color:inherit;}
 
 .burger{
   display:none; background:none; border:none; cursor:pointer;
@@ -298,7 +306,7 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
     padding:10px; max-height:calc(100vh - 68px); overflow-y:auto;
   }
   .nav-links.mobile-open{display:flex;}
-  .nav-item[data-nav="services"]{position:relative;}
+  .nav-links > a{width:100%; justify-content:space-between;}
   .nav-item > button, .nav-item > a{width:100%; justify-content:space-between;}
 
   .mega, .simple-menu{
@@ -309,10 +317,11 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
   .mega-inner{padding:12px; grid-template-columns:1fr; gap:4px;}
   .mega-cell{padding:12px;}
 
-  .nav-cta--desktop{display:none;}
-  .nav-cta--mobile{
-    display:block; text-align:center; margin-top:10px;
+  /* Dans la liste mobile, l'avatar redevient horizontal (icône + nom côte à côte) */
+  .nav-item[data-nav="account"] > button{
+    flex-direction:row; justify-content:flex-start; gap:10px;
   }
+  .account-name{font-size:0.94rem;}
 }
 
 @media (max-width:480px){

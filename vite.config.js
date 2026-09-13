@@ -12,6 +12,9 @@ export default defineConfig({
         cybersecurite: resolve(__dirname, 'cybersecurite.html'),
         flyers: resolve(__dirname, 'flyers.html'),
         contact: resolve(__dirname, 'contact.html'),
+        apercuEntreprise: resolve(__dirname, 'apercu-entreprise.html'),
+        leadership: resolve(__dirname, 'leadership.html'),
+        carriere: resolve(__dirname, 'carriere.html'),
       },
       output: {
         entryFileNames: 'assets/[name].js',
