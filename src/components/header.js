@@ -56,11 +56,11 @@ export function renderHeader() {
           </div>
         </div>
         <div class="nav-item" data-nav="account">
-          <button type="button" aria-expanded="false">
+          <button type="button" aria-expanded="false" id="account-nav-label">
             Compte
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
-          <div class="simple-menu">
+          <div class="simple-menu" id="account-nav-menu">
             <a href="/login.php">Se connecter</a>
             <a href="/register.php">Créer un compte</a>
           </div>

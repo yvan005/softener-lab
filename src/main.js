@@ -81,8 +81,32 @@ function initMobileMenu() {
   });
 }
 
+async function syncAccountMenu() {
+  const label = document.getElementById('account-nav-label');
+  const menu = document.getElementById('account-nav-menu');
+  if (!label || !menu) return;
+
+  try {
+    const res = await fetch('/session-status.php', { credentials: 'same-origin' });
+    const data = await res.json();
+
+    if (data.loggedIn) {
+      // On ne garde que le prénom (premier mot) pour ne pas surcharger le menu.
+      const firstName = (data.name || '').split(' ')[0] || 'Mon compte';
+      label.childNodes[0].textContent = firstName + ' ';
+      menu.innerHTML = `
+        <a href="/dashboard.php">Mon espace</a>
+        <a href="/logout.php">Se déconnecter</a>
+      `;
+    }
+  } catch (e) {
+    // Si l'appel échoue (page hors du même serveur, etc.), on garde le menu par défaut.
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   mountLayout();
   initNavDropdowns();
   initMobileMenu();
+  syncAccountMenu();
 });
