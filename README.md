@@ -54,6 +54,33 @@ Pour vérifier le résultat avant de le mettre en ligne :
 npm run preview
 ```
 
+## Déploiement automatique (GitHub Actions)
+
+Le site se déploie automatiquement sur InfinityFree à chaque `git push` sur la branche `main` — plus besoin de manipuler le gestionnaire de fichiers manuellement.
+
+### Configuration à faire une seule fois
+
+1. Sur GitHub, va dans ton dépôt > **Settings** > **Secrets and variables** > **Actions**.
+2. Ajoute ces 4 secrets (**New repository secret**) :
+
+| Nom du secret | Valeur |
+|---|---|
+| `FTP_USERNAME` | `if0_42901352` (ton nom d'utilisateur InfinityFree) |
+| `FTP_PASSWORD` | ton mot de passe vPanel InfinityFree (sert aussi pour la base de données) |
+| `SMTP_USER` | ton adresse Gmail utilisée pour l'envoi d'emails |
+| `SMTP_PASS` | ton mot de passe d'application Gmail (16 caractères) |
+
+3. Une fois les 4 secrets ajoutés, n'importe quel `git push` sur `main` déclenche automatiquement :
+   - la construction du site (`npm run build`)
+   - la génération de `includes/db.php` et `includes/config.php` avec les vrais identifiants (jamais stockés dans le code)
+   - l'envoi de tout ça vers `htdocs/` sur InfinityFree via FTP
+
+Tu peux suivre chaque déploiement dans l'onglet **Actions** de ton dépôt GitHub.
+
+### En cas de souci
+
+Le FTP d'InfinityFree (hébergement gratuit) est parfois lent ou instable. Si un déploiement échoue, relance-le simplement depuis l'onglet Actions (bouton "Re-run jobs"), ou reviens temporairement à l'upload manuel via le gestionnaire de fichiers en cas de besoin urgent.
+
 ## Comment modifier le site
 
 - **Texte et contenu d'une page** : ouvre le fichier `.html` correspondant (ex. `formations.html`) et modifie directement le texte entre les balises.

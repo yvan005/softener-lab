@@ -1,0 +1,68 @@
+name: Déploiement InfinityFree
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dépendances et construire le site
+        run: |
+          npm ci
+          npm run build
+
+      - name: Préparer le dossier de déploiement
+        env:
+          DB_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          mkdir -p deploy
+          cp -r dist/* deploy/
+          cp -r backend-php/* deploy/
+          rm -f deploy/includes/db.template.php deploy/includes/config.template.php
+
+          python3 - <<PYEOF
+          import os
+
+          def render(template_path, out_path, mapping):
+              with open(template_path, encoding="utf-8") as f:
+                  content = f.read()
+              for key, value in mapping.items():
+                  content = content.replace(key, value)
+              with open(out_path, "w", encoding="utf-8") as f:
+                  f.write(content)
+
+          mapping = {
+              "__DB_PASSWORD__": os.environ["DB_PASSWORD"],
+              "__SMTP_USER__": os.environ["SMTP_USER"],
+              "__SMTP_PASS__": os.environ["SMTP_PASS"],
+          }
+
+          render("backend-php/includes/db.template.php", "deploy/includes/db.php", mapping)
+          render("backend-php/includes/config.template.php", "deploy/includes/config.php", mapping)
+          PYEOF
+
+      - name: Déployer vers InfinityFree via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftpupload.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deploy/
+          server-dir: /htdocs/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/sql/**
