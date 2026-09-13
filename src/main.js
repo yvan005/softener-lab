@@ -74,7 +74,7 @@ function initMobileMenu() {
     }
   });
   window.addEventListener('resize', () => {
-    if (window.innerWidth > 860) {
+    if (window.innerWidth > 1000) {
       navLinks.classList.remove('mobile-open');
       burger.setAttribute('aria-expanded', 'false');
     }

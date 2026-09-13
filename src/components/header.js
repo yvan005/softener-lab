@@ -10,41 +10,11 @@ export function renderHeader() {
         Softener Lab
       </a>
       <div class="nav-links">
-        <div class="nav-item" data-nav="services">
-          <button type="button" aria-expanded="false">
-            Services
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-          </button>
-          <div class="mega">
-            <div class="mega-inner">
-              <a class="mega-cell" href="/formations.html">
-                <span class="mega-tag">FORMATION</span>
-                <h5>Formations en ligne</h5>
-                <p>Photoshop, InDesign, montage vidéo, cybersécurité.</p>
-              </a>
-              <a class="mega-cell" href="/design.html">
-                <span class="mega-tag">DESIGN</span>
-                <h5>Design & infographie</h5>
-                <p>Identité visuelle, supports imprimés et digitaux.</p>
-              </a>
-              <a class="mega-cell" href="/developpement.html">
-                <span class="mega-tag">DÉVELOPPEMENT</span>
-                <h5>Applications & logiciels</h5>
-                <p>Web, mobile et logiciels métier sur mesure.</p>
-              </a>
-              <a class="mega-cell" href="/cybersecurite.html">
-                <span class="mega-tag">SÉCURITÉ</span>
-                <h5>Cybersécurité</h5>
-                <p>Audits, tests d'intrusion, accompagnement.</p>
-              </a>
-              <a class="mega-cell" href="/flyers.html">
-                <span class="mega-tag">SUPPORTS</span>
-                <h5>Flyers & templates</h5>
-                <p>Modèles prêts à l'emploi ou créations sur mesure.</p>
-              </a>
-            </div>
-          </div>
-        </div>
+        <a href="/formations.html">Formations</a>
+        <a href="/design.html">Design</a>
+        <a href="/developpement.html">Développement</a>
+        <a href="/cybersecurite.html">Cybersécurité</a>
+        <a href="/flyers.html">Flyers</a>
         <a href="/index.html#about">À propos</a>
         <div class="nav-item" data-nav="account">
           <button type="button" aria-expanded="false" id="account-nav-label">
