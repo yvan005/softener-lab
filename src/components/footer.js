@@ -16,7 +16,7 @@ export function renderFooter() {
       </div>
       <div class="foot-col">
         <h4>STUDIO</h4>
-        <a href="/index.html#about">À propos</a>
+        <a href="/apercu-entreprise.html">À propos</a>
         <a href="/contact.html">Contact</a>
       </div>
       <div class="foot-col">
