@@ -45,16 +45,7 @@ export function renderHeader() {
             </div>
           </div>
         </div>
-        <div class="nav-item" data-nav="studio">
-          <button type="button" aria-expanded="false">
-            Studio
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-          </button>
-          <div class="simple-menu">
-            <a href="/index.html#about">À propos</a>
-            <a href="/contact.html">Contact</a>
-          </div>
-        </div>
+        <a href="/index.html#about">À propos</a>
         <div class="nav-item" data-nav="account">
           <button type="button" aria-expanded="false" id="account-nav-label">
             Compte
