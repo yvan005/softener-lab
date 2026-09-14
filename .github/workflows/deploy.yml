@@ -24,7 +24,7 @@ jobs:
 
       - name: Préparer le dossier de déploiement
         env:
-          DB_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: |
