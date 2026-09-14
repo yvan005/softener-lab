@@ -30,9 +30,13 @@ export function renderHeader() {
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </button>
           <div class="simple-menu">
-            <a href="/identite-visuelle.html">Identité visuelle</a>
-            <a href="/supports-imprimes.html">Supports imprimés</a>
-            <a href="/creation-video.html">Création vidéo</a>
+            <a href="/design-graphique.html">Design graphique</a>
+            <a href="/design-web-ux-ui.html">Design web / UX-UI</a>
+            <a href="/design-reseaux-sociaux.html">Design réseaux sociaux</a>
+            <a href="/motion-design.html">Motion design</a>
+            <a href="/illustration.html">Illustration</a>
+            <a href="/design-packaging.html">Design de packaging</a>
+            <a href="/design-espace-interieur.html">Design d'espace / intérieur</a>
           </div>
         </div>
 
