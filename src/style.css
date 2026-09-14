@@ -151,6 +151,7 @@ nav{
   100%{transform:translate(3%,-2%) scale(1.06);}
 }
 @media (prefers-reduced-motion: reduce){ .hero::before{animation:none;} }
+.hero-bg{position:absolute; inset:0; z-index:0; width:100%; height:100%; display:block;}
 .hero-grid, .hero > .wrap{position:relative; z-index:1;}
 
 .scroll-cue{
