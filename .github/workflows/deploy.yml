@@ -12,10 +12,10 @@ jobs:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      - name: Installer Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Vérifier Node.js
+        run: |
+          node --version
+          npm --version
 
       - name: Installer les dépendances et construire le site
         run: |
@@ -53,15 +53,6 @@ jobs:
           render("backend-php/includes/db.template.php", "deploy/includes/db.php", mapping)
           render("backend-php/includes/config.template.php", "deploy/includes/config.php", mapping)
           PYEOF
-
-      - name: Diagnostic temporaire (longueur des secrets, sans révéler leur contenu)
-        env:
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          echo "Longueur de FTP_USERNAME : ${#FTP_USERNAME} caractères"
-          echo "Longueur de FTP_PASSWORD : ${#FTP_PASSWORD} caractères"
-          echo "Premier caractère de FTP_USERNAME : ${FTP_USERNAME:0:2}..."
 
       - name: Déployer vers InfinityFree via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
