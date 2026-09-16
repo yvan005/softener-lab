@@ -60,8 +60,12 @@ export function renderHeader() {
           <div class="simple-menu">
             <a href="/audit-securite.html">Audit de sécurité</a>
             <a href="/test-intrusion.html">Test d'intrusion</a>
-            <a href="/sensibilisation-equipes.html">Sensibilisation des équipes</a>
-            <a href="/accompagnement-continu.html">Accompagnement continu</a>
+            <a href="/conseil-strategie.html">Conseil et stratégie</a>
+            <a href="/formation-sensibilisation.html">Formation et sensibilisation</a>
+            <a href="/securite-reseau.html">Sécurité réseau</a>
+            <a href="/reponse-incident.html">Réponse à incident</a>
+            <a href="/securite-cloud.html">Sécurité cloud</a>
+            <a href="/securite-applications.html">Sécurité des applications</a>
           </div>
         </div>
 
