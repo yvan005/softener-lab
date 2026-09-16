@@ -2,6 +2,7 @@ import './style.css';
 import { renderHeader } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { mountHeroBackground } from './components/hero-bg.js';
+import { mountBackToTop } from './components/back-to-top.js';
 
 function mountLayout() {
   const headerMount = document.getElementById('site-header');
@@ -114,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavDropdowns();
   initMobileMenu();
   syncAccountMenu();
+  mountBackToTop();
 
   const heroCanvas = document.getElementById('hero-bg');
   if (heroCanvas) mountHeroBackground(heroCanvas);
