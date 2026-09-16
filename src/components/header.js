@@ -77,7 +77,14 @@ export function renderHeader() {
           <div class="simple-menu">
             <a href="/modele-evenementiel.html">Modèle Événementiel</a>
             <a href="/modele-promotion.html">Modèle Promotion</a>
-            <a href="/modele-annonce.html">Modèle Annonce</a>
+            <a href="/modele-annonces.html">Modèle Annonces</a>
+            <a href="/modele-recrutement.html">Modèle Recrutement</a>
+            <a href="/modele-associatif.html">Modèle Associatif</a>
+            <a href="/modele-restaurant-menu.html">Modèle Restaurant/Menu</a>
+            <a href="/modele-informatif-educatif.html">Modèle Informatif/Éducatif</a>
+            <a href="/modele-politique.html">Modèle Politique</a>
+            <a href="/modele-invitation.html">Modèle Invitation</a>
+            <a href="/modele-coupon-reduction.html">Modèle Coupon/Réduction</a>
           </div>
         </div>
 
