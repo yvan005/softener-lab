@@ -10,20 +10,6 @@ export function renderHeader() {
         Softener Lab
       </a>
       <div class="nav-links">
-        <div class="nav-item" data-nav="formations">
-          <button type="button" aria-expanded="false">
-            Formations
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-          </button>
-          <div class="simple-menu">
-            <a href="/photoshop-fondamentaux.html">Photoshop — Fondamentaux</a>
-            <a href="/indesign-mise-en-page.html">InDesign — Mise en page</a>
-            <a href="/montage-video.html">Montage vidéo</a>
-            <a href="/cybersecurite-bases.html">Cybersécurité — Les bases</a>
-            <a href="/cybersecurite-audit.html">Cybersécurité — Audit & pentest</a>
-          </div>
-        </div>
-
         <div class="nav-item" data-nav="design">
           <button type="button" aria-expanded="false">
             Design
@@ -85,6 +71,20 @@ export function renderHeader() {
             <a href="/modele-politique.html">Modèle Politique</a>
             <a href="/modele-invitation.html">Modèle Invitation</a>
             <a href="/modele-coupon-reduction.html">Modèle Coupon/Réduction</a>
+          </div>
+        </div>
+
+        <div class="nav-item" data-nav="formations">
+          <button type="button" aria-expanded="false">
+            Formations
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+          <div class="simple-menu">
+            <a href="/formation-bureautique.html">Bureautique</a>
+            <a href="/formation-graphique-design.html">Graphique & Design</a>
+            <a href="/formation-seo-international.html">SEO International</a>
+            <a href="/formation-programmation-python.html">Programmation Python</a>
+            <a href="/formation-cybersecurite.html">Cybersécurité</a>
           </div>
         </div>
 
