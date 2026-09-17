@@ -227,15 +227,18 @@ nav{
   max-width:min(58ch, 92%);
   padding:24px 28px;
   border-radius:12px;
-  background:rgba(8,9,11,0.55);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
+  background:rgba(8,9,11,0.62);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   border:1px solid rgba(255,255,255,0.08);
 }
 .page-header.has-banner .eyebrow-line,
 .page-header.has-banner h1,
 .page-header.has-banner p{
   text-shadow:none;
+}
+.page-header.has-banner p{
+  color:rgba(237, 239, 236, 0.88);
 }
 .page-header .eyebrow-line{margin-bottom:20px;}
 .page-header h1{
