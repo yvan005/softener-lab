@@ -232,6 +232,10 @@ nav{
   -webkit-backdrop-filter:blur(8px);
   border:1px solid rgba(255,255,255,0.08);
 }
+.page-header.has-banner .wrap.align-right{
+  display:flex;
+  justify-content:flex-end;
+}
 .page-header.has-banner .eyebrow-line,
 .page-header.has-banner h1,
 .page-header.has-banner p{
