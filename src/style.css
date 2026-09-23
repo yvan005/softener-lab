@@ -363,6 +363,14 @@ nav{
   font-family:var(--mono); font-size:0.72rem; color:var(--ink-on-paper);
   background:var(--paper); padding:5px 12px; border-radius:20px; border:1px solid var(--paper-line);
 }
+.portfolio-bento .p-tile.has-img{background:var(--paper); padding:0; align-items:flex-end;}
+.portfolio-bento .p-tile.has-img img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.portfolio-bento .p-tile.has-img span{
+  position:relative; z-index:1; margin:14px;
+  background:rgba(244,245,243,0.92); backdrop-filter:blur(4px);
+}
 .portfolio-note{
   margin-top:28px; font-family:var(--mono); font-size:0.78rem; color:var(--muted-on-paper);
   display:flex; align-items:center; gap:8px;
