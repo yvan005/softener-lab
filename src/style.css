@@ -263,6 +263,10 @@ nav{
 
 /* SERVICES */
 .services{padding:100px 0; border-bottom:1px solid var(--paper-line);}
+.services.is-compact{padding:56px 0;}
+.service-row.is-desc-only{grid-template-columns:1fr; padding:0; border-top:none;}
+.service-row.is-desc-only:last-child{border-bottom:none;}
+.service-row.is-desc-only .service-desc{max-width:70ch;}
 .section-head{
   display:flex; justify-content:space-between; align-items:flex-end;
   margin-bottom:64px; gap:40px; flex-wrap:wrap;
