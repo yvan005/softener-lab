@@ -4,30 +4,30 @@ export function renderFooter() {
     <div class="foot-grid">
       <div class="foot-col">
         <h4>SOFTENER LAB</h4>
-        <p style="color:#8D95A3;">Studio de formation, design, développement et cybersécurité.</p>
+        <p style="color:#8D95A3;" data-i18n="footer.tagline">Studio de formation, design, développement et cybersécurité.</p>
       </div>
       <div class="foot-col">
-        <h4>MODULES</h4>
-        <a href="/formations.html">Formations</a>
-        <a href="/design.html">Design</a>
-        <a href="/developpement.html">Développement</a>
-        <a href="/cybersecurite.html">Cybersécurité</a>
-        <a href="/flyers.html">Flyers</a>
+        <h4 data-i18n="footer.modules">MODULES</h4>
+        <a href="/formations.html" data-i18n="footer.formations">Formations</a>
+        <a href="/design.html" data-i18n="footer.design">Design</a>
+        <a href="/developpement.html" data-i18n="footer.developpement">Développement</a>
+        <a href="/cybersecurite.html" data-i18n="footer.cybersecurite">Cybersécurité</a>
+        <a href="/flyers.html" data-i18n="footer.flyers">Flyers</a>
       </div>
       <div class="foot-col">
-        <h4>STUDIO</h4>
-        <a href="/apercu-entreprise.html">À propos</a>
-        <a href="/contact.html">Contact</a>
+        <h4 data-i18n="footer.studio">STUDIO</h4>
+        <a href="/apercu-entreprise.html" data-i18n="footer.apropos">À propos</a>
+        <a href="/contact.html" data-i18n="footer.contact">Contact</a>
       </div>
       <div class="foot-col">
-        <h4>RÉSEAUX</h4>
+        <h4 data-i18n="footer.reseaux">RÉSEAUX</h4>
         <a href="#">LinkedIn</a>
         <a href="#">Instagram</a>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Softener Lab</span>
-      <span>Design. Develop. Protect.</span>
+      <span data-i18n="footer.rights">© 2026 Softener Lab</span>
+      <span data-i18n="footer.baseline">Design. Develop. Protect.</span>
     </div>
   </div>
   `;

@@ -105,6 +105,16 @@ nav{
 .simple-menu a{display:block; padding:9px 12px; border-radius:4px; font-size:0.9rem; color:var(--muted); white-space:normal; line-height:1.4;}
 .simple-menu a:hover{background:var(--panel-2); color:var(--text);}
 
+.nav-item[data-nav="lang"] > button{
+  font-family:var(--mono); font-size:0.78rem; letter-spacing:0.03em;
+}
+.lang-option{
+  width:100%; text-align:left; background:none; border:none; font:inherit; cursor:pointer;
+  display:block; padding:9px 12px; border-radius:4px; font-size:0.9rem; color:var(--muted);
+}
+.lang-option:hover{background:var(--panel-2); color:var(--text);}
+.lang-option.lang-active{color:var(--green);}
+
 .nav-item[data-nav="account"] > button{
   flex-direction:column; gap:3px; padding:8px 12px;
 }

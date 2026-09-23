@@ -3,6 +3,8 @@ import { renderHeader } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { mountHeroBackground } from './components/hero-bg.js';
 import { mountBackToTop } from './components/back-to-top.js';
+import { initI18n, refreshTranslations, getCurrentLang } from './i18n/i18n.js';
+import { translations } from './i18n/translations.js';
 
 function mountLayout() {
   const headerMount = document.getElementById('site-header');
@@ -96,13 +98,14 @@ async function syncAccountMenu() {
     if (data.loggedIn) {
       const firstName = (data.name || '').split(' ')[0] || 'Mon compte';
       const initial = firstName.charAt(0).toUpperCase();
+      const dict = translations[getCurrentLang()] || translations.fr;
 
       avatar.innerHTML = `<span class="account-initial">${initial}</span>`;
       avatar.classList.add('account-avatar--active');
       nameEl.textContent = firstName;
       menu.innerHTML = `
-        <a href="/dashboard.php">Mon espace</a>
-        <a href="/logout.php">Se déconnecter</a>
+        <a href="/dashboard.php">${dict.nav.monEspace}</a>
+        <a href="/logout.php">${dict.nav.seDeconnecter}</a>
       `;
     }
   } catch (e) {
@@ -112,6 +115,8 @@ async function syncAccountMenu() {
 
 document.addEventListener('DOMContentLoaded', () => {
   mountLayout();
+  initI18n();
+  refreshTranslations(); // applique la langue au header/footer qui viennent d'être injectés
   initNavDropdowns();
   initMobileMenu();
   syncAccountMenu();
