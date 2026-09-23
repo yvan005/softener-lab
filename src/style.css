@@ -266,7 +266,7 @@ nav{
 .services.is-compact{padding:56px 0;}
 .service-row.is-desc-only{grid-template-columns:1fr; padding:0; border-top:none;}
 .service-row.is-desc-only:last-child{border-bottom:none;}
-.service-row.is-desc-only .service-desc{max-width:70ch;}
+.service-row.is-desc-only .service-desc{max-width:70ch; font-size:1.25rem; line-height:1.6;}
 .section-head{
   display:flex; justify-content:space-between; align-items:flex-end;
   margin-bottom:64px; gap:40px; flex-wrap:wrap;
