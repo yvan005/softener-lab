@@ -340,7 +340,39 @@ nav{
 }
 .design-item h3{font-family:var(--display); font-weight:600; font-size:1.05rem; margin-bottom:8px;}
 .design-item p{color:var(--muted-on-paper); font-size:0.92rem;}
+/* --- Portfolio "showcase" : mise en avant en bento, section dédiée en pleine largeur --- */
+.portfolio-showcase{padding:90px 0 100px; border-bottom:1px solid var(--paper-line); background:var(--paper-2);}
+.portfolio-bento{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
+  margin-top:48px;
+}
+.portfolio-bento .p-tile{
+  aspect-ratio:4/3; border-radius:10px; position:relative; overflow:hidden;
+  background:
+    radial-gradient(circle at 1px 1px, var(--paper-line) 1px, transparent 0) 0 0/16px 16px,
+    var(--paper);
+  border:1px solid var(--paper-line);
+  display:flex; align-items:flex-end; padding:18px;
+  transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.portfolio-bento .p-tile:hover{
+  border-color:var(--green-on-paper); transform:translateY(-3px);
+  box-shadow:0 16px 32px -16px rgba(14,18,16,0.25);
+}
+.portfolio-bento .p-tile span{
+  font-family:var(--mono); font-size:0.72rem; color:var(--ink-on-paper);
+  background:var(--paper); padding:5px 12px; border-radius:20px; border:1px solid var(--paper-line);
+}
+.portfolio-note{
+  margin-top:28px; font-family:var(--mono); font-size:0.78rem; color:var(--muted-on-paper);
+  display:flex; align-items:center; gap:8px;
+}
+.portfolio-note .dot{width:6px; height:6px; border-radius:50%; background:var(--green-on-paper); flex-shrink:0;}
+@media (max-width:900px){
+  .portfolio-bento{grid-template-columns:repeat(2, 1fr);}
+}
 @media (max-width:640px){
+  .portfolio-bento{grid-template-columns:1fr;}
   .portfolio-strip{grid-template-columns:1fr;}
   .design-grid{grid-template-columns:1fr;}
 }
