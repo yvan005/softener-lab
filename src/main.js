@@ -113,6 +113,18 @@ async function syncAccountMenu() {
   }
 }
 
+function prefillContactService() {
+  const select = document.getElementById('service');
+  if (!select) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const wanted = params.get('service');
+  if (!wanted) return;
+
+  const matches = Array.from(select.options).some((o) => o.value === wanted);
+  if (matches) select.value = wanted;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   mountLayout();
   initI18n();
@@ -121,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   syncAccountMenu();
   mountBackToTop();
+  prefillContactService();
 
   const heroCanvas = document.getElementById('hero-bg');
   if (heroCanvas) mountHeroBackground(heroCanvas);
