@@ -42,6 +42,40 @@ function send_verification_email(string $toEmail, string $toName, string $token)
     }
 }
 
+function send_password_reset_email(string $toEmail, string $toName, string $token): bool
+{
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+        $mail->CharSet    = 'UTF-8';
+
+        $mail->setFrom(SMTP_FROM, SMTP_FROM_NAME);
+        $mail->addAddress($toEmail, $toName);
+
+        $resetLink = SITE_URL . '/reset-password.php?token=' . urlencode($token);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Réinitialise ton mot de passe Softener Lab';
+        $mail->Body    = "Bonjour {$toName},<br><br>
+            Tu as demandé à réinitialiser ton mot de passe. Clique sur ce lien pour en choisir un nouveau (valable 1 heure) :<br>
+            <a href=\"{$resetLink}\">{$resetLink}</a><br><br>
+            Si tu n'es pas à l'origine de cette demande, ignore ce message : ton mot de passe actuel reste inchangé.";
+        $mail->AltBody = "Réinitialise ton mot de passe en ouvrant ce lien (valable 1 heure) : {$resetLink}";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log('Erreur envoi email réinitialisation: ' . $mail->ErrorInfo);
+        return false;
+    }
+}
+
 function send_contact_email(string $name, string $email, string $company, string $service, string $message): bool
 {
     $mail = new PHPMailer(true);

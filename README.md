@@ -121,4 +121,5 @@ Puis crée un dépôt vide sur GitHub et suis les instructions affichées pour l
 - [ ] Remplacer les liens `#` du footer (LinkedIn, Instagram) par tes vrais profils.
 - [ ] Ajouter un favicon et les balises meta pour le référencement (titre, description) propres à chaque page.
 - [x] Espace membre : session régénérée à la connexion (anti-fixation), verrouillage du compte après 5 tentatives échouées (15 min), lien de confirmation d'email expirant au bout de 24h, cookies de session `httponly`/`SameSite`. ⚠️ Si la base est déjà en prod, exécute la section "Migration" en bas de `backend-php/sql/schema.sql` pour ajouter les nouvelles colonnes.
-- [ ] Espace membre — reste à faire : "mot de passe oublié", renvoi de l'email de confirmation, page "Mon profil".
+- [ ] Espace membre — reste à faire : renvoi de l'email de confirmation, page "Mon profil".
+- [x] Espace membre : "mot de passe oublié" (`forgot-password.php` → email avec lien valable 1h → `reset-password.php`). Ne révèle jamais si un email a un compte ou non. Colonnes `reset_token` / `reset_token_expires` ajoutées à `users` (migration dans `schema.sql`).

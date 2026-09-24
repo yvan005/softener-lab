@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="form-row">
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" required>
+        <p style="margin-top:8px; font-size:0.85rem;"><a href="/forgot-password.php" style="text-decoration:underline; color:var(--muted-on-paper);">Mot de passe oublié ?</a></p>
       </div>
       <button type="submit" class="btn-primary">Se connecter</button>
     </form>
