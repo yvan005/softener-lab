@@ -1,9 +1,11 @@
 <?php
 // login.php
-session_start();
+require_once __DIR__ . '/includes/session.php';
 require_once __DIR__ . '/includes/db.php';
 
 $errors = [];
+$LOCK_THRESHOLD = 5;      // tentatives échouées avant verrouillage
+$LOCK_MINUTES   = 15;     // durée du verrouillage
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email'] ?? '');
@@ -13,11 +15,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
-    if (!$user || !password_verify($password, $user['password_hash'])) {
-        $errors[] = "Email ou mot de passe incorrect.";
+    $isLocked = $user && $user['locked_until'] !== null && strtotime($user['locked_until']) > time();
+
+    if ($isLocked) {
+        $minutesLeft = (int) ceil((strtotime($user['locked_until']) - time()) / 60);
+        $errors[] = "Trop de tentatives échouées. Réessaie dans {$minutesLeft} minute" . ($minutesLeft > 1 ? 's' : '') . ".";
+    } elseif (!$user || !password_verify($password, $user['password_hash'])) {
+        if ($user) {
+            $attempts = (int) $user['failed_attempts'] + 1;
+            if ($attempts >= $LOCK_THRESHOLD) {
+                $lockUntil = date('Y-m-d H:i:s', time() + $LOCK_MINUTES * 60);
+                $upd = $pdo->prepare('UPDATE users SET failed_attempts = 0, locked_until = ? WHERE id = ?');
+                $upd->execute([$lockUntil, $user['id']]);
+                $errors[] = "Trop de tentatives échouées. Réessaie dans {$LOCK_MINUTES} minutes.";
+            } else {
+                $upd = $pdo->prepare('UPDATE users SET failed_attempts = ? WHERE id = ?');
+                $upd->execute([$attempts, $user['id']]);
+                $errors[] = "Email ou mot de passe incorrect.";
+            }
+        } else {
+            $errors[] = "Email ou mot de passe incorrect.";
+        }
     } elseif (!$user['is_verified']) {
         $errors[] = "Confirme d'abord ton adresse email (vérifie ta boîte de réception).";
     } else {
+        $reset = $pdo->prepare('UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = ?');
+        $reset->execute([$user['id']]);
+
+        // Régénère l'identifiant de session après authentification pour éviter
+        // toute fixation de session (un ID de session obtenu avant connexion
+        // ne doit jamais devenir un ID de session authentifié).
+        session_regenerate_id(true);
+
         $_SESSION['user_id']    = $user['id'];
         $_SESSION['user_name']  = $user['full_name'];
         $_SESSION['user_email'] = $user['email'];

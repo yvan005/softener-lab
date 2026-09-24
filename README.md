@@ -120,3 +120,5 @@ Puis crée un dépôt vide sur GitHub et suis les instructions affichées pour l
 - [x] Formulaire de `contact.html` connecté : il envoie un email via PHPMailer (`backend-php/contact.php`, réutilise la config SMTP déjà en place pour les comptes utilisateurs). Le message arrive dans la boîte définie par `SMTP_FROM`, avec le visiteur en Reply-To.
 - [ ] Remplacer les liens `#` du footer (LinkedIn, Instagram) par tes vrais profils.
 - [ ] Ajouter un favicon et les balises meta pour le référencement (titre, description) propres à chaque page.
+- [x] Espace membre : session régénérée à la connexion (anti-fixation), verrouillage du compte après 5 tentatives échouées (15 min), lien de confirmation d'email expirant au bout de 24h, cookies de session `httponly`/`SameSite`. ⚠️ Si la base est déjà en prod, exécute la section "Migration" en bas de `backend-php/sql/schema.sql` pour ajouter les nouvelles colonnes.
+- [ ] Espace membre — reste à faire : "mot de passe oublié", renvoi de l'email de confirmation, page "Mon profil".

@@ -1,6 +1,6 @@
 <?php
 // session-status.php
-session_start();
+require_once __DIR__ . '/includes/session.php';
 header('Content-Type: application/json');
 
 if (isset($_SESSION['user_id'])) {

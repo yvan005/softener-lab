@@ -8,12 +8,16 @@ $message = '';
 if ($token === '') {
     $message = "Lien invalide.";
 } else {
-    $stmt = $pdo->prepare('SELECT id FROM users WHERE verification_token = ? AND is_verified = 0');
+    $stmt = $pdo->prepare('SELECT id, verification_token_expires FROM users WHERE verification_token = ? AND is_verified = 0');
     $stmt->execute([$token]);
     $user = $stmt->fetch();
 
-    if ($user) {
-        $update = $pdo->prepare('UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?');
+    $isExpired = $user && $user['verification_token_expires'] !== null && strtotime($user['verification_token_expires']) < time();
+
+    if ($user && $isExpired) {
+        $message = "Ce lien de confirmation a expiré (valable 24h). Réinscris-toi avec la même adresse email pour recevoir un nouveau lien.";
+    } elseif ($user) {
+        $update = $pdo->prepare('UPDATE users SET is_verified = 1, verification_token = NULL, verification_token_expires = NULL WHERE id = ?');
         $update->execute([$user['id']]);
         $message = "Ton compte est confirmé ! Tu peux maintenant te connecter.";
     } else {

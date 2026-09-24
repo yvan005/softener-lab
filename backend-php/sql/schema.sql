@@ -8,8 +8,18 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,
   is_verified TINYINT(1) NOT NULL DEFAULT 0,
   verification_token VARCHAR(64) DEFAULT NULL,
+  verification_token_expires DATETIME DEFAULT NULL,
+  failed_attempts INT NOT NULL DEFAULT 0,
+  locked_until DATETIME DEFAULT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Migration pour une base déjà existante (si la table `users` a été créée
+-- avant l'ajout de ces colonnes) : ces instructions ne font rien si les
+-- colonnes existent déjà.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS verification_token_expires DATETIME DEFAULT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_attempts INT NOT NULL DEFAULT 0;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS locked_until DATETIME DEFAULT NULL;
 
 CREATE TABLE IF NOT EXISTS trainings (
   id INT AUTO_INCREMENT PRIMARY KEY,

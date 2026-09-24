@@ -17,22 +17,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($password) < 8) $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
     if ($password !== $confirm) $errors[] = "Les mots de passe ne correspondent pas.";
 
+    $existingUnverifiedId = null;
     if (empty($errors)) {
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
+        $stmt = $pdo->prepare('SELECT id, is_verified FROM users WHERE email = ?');
         $stmt->execute([$email]);
-        if ($stmt->fetch()) {
+        $existing = $stmt->fetch();
+        if ($existing && (int) $existing['is_verified'] === 1) {
             $errors[] = "Un compte existe déjà avec cette adresse email.";
+        } elseif ($existing) {
+            // Compte jamais confirmé (ex: lien expiré) : on relance l'inscription
+            // avec un nouveau mot de passe et un nouveau lien plutôt que de bloquer.
+            $existingUnverifiedId = $existing['id'];
         }
     }
 
     if (empty($errors)) {
-        $hash  = password_hash($password, PASSWORD_DEFAULT);
-        $token = bin2hex(random_bytes(32));
+        $hash    = password_hash($password, PASSWORD_DEFAULT);
+        $token   = bin2hex(random_bytes(32));
+        $expires = date('Y-m-d H:i:s', time() + 24 * 60 * 60); // valable 24h
 
-        $stmt = $pdo->prepare(
-            'INSERT INTO users (full_name, email, password_hash, verification_token) VALUES (?, ?, ?, ?)'
-        );
-        $stmt->execute([$fullName, $email, $hash, $token]);
+        if ($existingUnverifiedId) {
+            $stmt = $pdo->prepare(
+                'UPDATE users SET full_name = ?, password_hash = ?, verification_token = ?, verification_token_expires = ? WHERE id = ?'
+            );
+            $stmt->execute([$fullName, $hash, $token, $expires, $existingUnverifiedId]);
+        } else {
+            $stmt = $pdo->prepare(
+                'INSERT INTO users (full_name, email, password_hash, verification_token, verification_token_expires) VALUES (?, ?, ?, ?, ?)'
+            );
+            $stmt->execute([$fullName, $email, $hash, $token, $expires]);
+        }
 
         $sent = send_verification_email($email, $fullName, $token);
         if (!$sent) {
