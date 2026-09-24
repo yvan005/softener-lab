@@ -5,6 +5,7 @@
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/roles.php';
 
 const MEMBER_LOCK_THRESHOLD = 5;   // mêmes seuils que login.php
 const MEMBER_LOCK_MINUTES   = 15;
@@ -108,6 +109,14 @@ function member_page_start(string $title, string $h1, string $lead, string $acti
         'orders'    => ['/orders.php',    'Mes commandes'],
         'profile'   => ['/profile.php',   'Mon profil'],
     ];
+    if (is_admin_email($_SESSION['user_email'] ?? '')) {
+        $tabs['admin'] = ['/admin.php', 'Administration'];
+    }
+    page_start($title, $h1, $lead, $tabs, $active, 'ESPACE MEMBRE');
+}
+
+/** Gabarit commun : en-tête de page, onglets, message flash. */
+function page_start(string $title, string $h1, string $lead, array $tabs, string $active, string $eyebrow): void {
     ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -124,7 +133,7 @@ function member_page_start(string $title, string $h1, string $lead, string $acti
 
 <section class="page-header">
   <div class="wrap">
-    <div class="eyebrow-line"><span class="dot"></span> ESPACE MEMBRE</div>
+    <div class="eyebrow-line"><span class="dot"></span> <?= e($eyebrow) ?></div>
     <h1><?= e($h1) ?></h1>
     <p><?= e($lead) ?></p>
   </div>
@@ -132,7 +141,7 @@ function member_page_start(string $title, string $h1, string $lead, string $acti
 
 <section class="services is-compact member-area">
   <div class="wrap">
-    <nav class="member-tabs" aria-label="Espace membre">
+    <nav class="member-tabs" aria-label="<?= e($eyebrow) ?>">
       <?php foreach ($tabs as $key => [$href, $label]): ?>
         <a href="<?= e($href) ?>" class="member-tab<?= $key === $active ? ' is-active' : '' ?>"<?= $key === $active ? ' aria-current="page"' : '' ?>><?= e($label) ?></a>
       <?php endforeach; ?>

@@ -17,6 +17,7 @@ export const translations = {
       monEspace: 'Mon espace',
       monProfil: 'Mon profil',
       mesCommandes: 'Mes commandes',
+      administration: 'Administration',
       seDeconnecter: 'Se déconnecter',
     },
     navDesign: {
@@ -167,6 +168,7 @@ export const translations = {
       monEspace: 'My account',
       monProfil: 'My profile',
       mesCommandes: 'My orders',
+      administration: 'Administration',
       seDeconnecter: 'Log out',
     },
     navDesign: {
@@ -317,6 +319,7 @@ export const translations = {
       monEspace: 'Mi cuenta',
       monProfil: 'Mi perfil',
       mesCommandes: 'Mis pedidos',
+      administration: 'Administración',
       seDeconnecter: 'Cerrar sesión',
     },
     navDesign: {

@@ -12,3 +12,8 @@ define('SMTP_USER', '__SMTP_USER__');
 define('SMTP_PASS', '__SMTP_PASS__');
 define('SMTP_FROM', '__SMTP_USER__');
 define('SMTP_FROM_NAME', 'Softener Lab');
+
+// Administrateurs : ces adresses (comptes créés et confirmés sur le site) accèdent à
+// /admin.php. Par défaut, l'adresse d'envoi du site. Pour en ajouter :
+// define('ADMIN_EMAILS', [SMTP_FROM, 'toi@exemple.com']);
+define('ADMIN_EMAILS', [SMTP_FROM]);

@@ -80,35 +80,52 @@ function orders_ready(PDO $pdo): bool {
     static $ready = null;
     if ($ready !== null) return $ready;
 
+    $tableOk = false;
     try {
         $pdo->query('SELECT 1 FROM orders LIMIT 1');
-        return $ready = true;
+        $tableOk = true;
     } catch (Throwable $e) {
         // table absente : on tente la création ci-dessous
     }
 
-    try {
-        $pdo->exec(
-            "CREATE TABLE IF NOT EXISTS orders (
-              id INT AUTO_INCREMENT PRIMARY KEY,
-              user_id INT NOT NULL,
-              category VARCHAR(30) NOT NULL,
-              service VARCHAR(100) NOT NULL,
-              title VARCHAR(150) NOT NULL,
-              brief TEXT NOT NULL,
-              deadline DATE DEFAULT NULL,
-              status ENUM('pending','in_progress','delivered','cancelled') NOT NULL DEFAULT 'pending',
-              created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-              FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            )"
-        );
-        $pdo->query('SELECT 1 FROM orders LIMIT 1');
-        return $ready = true;
-    } catch (Throwable $e) {
-        error_log('Softener Lab : table `orders` introuvable et création impossible — importe sql/schema.sql. ' . $e->getMessage());
-        return $ready = false;
+    if (!$tableOk) {
+        try {
+            $pdo->exec(
+                "CREATE TABLE IF NOT EXISTS orders (
+                  id INT AUTO_INCREMENT PRIMARY KEY,
+                  user_id INT NOT NULL,
+                  category VARCHAR(30) NOT NULL,
+                  service VARCHAR(100) NOT NULL,
+                  title VARCHAR(150) NOT NULL,
+                  brief TEXT NOT NULL,
+                  deadline DATE DEFAULT NULL,
+                  status ENUM('pending','in_progress','delivered','cancelled') NOT NULL DEFAULT 'pending',
+                  admin_note TEXT DEFAULT NULL,
+                  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )"
+            );
+            $pdo->query('SELECT 1 FROM orders LIMIT 1');
+        } catch (Throwable $e) {
+            error_log('Softener Lab : table `orders` introuvable et création impossible — importe sql/schema.sql. ' . $e->getMessage());
+            return $ready = false;
+        }
     }
+
+    // Colonne `admin_note` (message de l'admin au membre), absente de la toute première version de la table.
+    try {
+        $pdo->query('SELECT admin_note FROM orders LIMIT 1');
+    } catch (Throwable $e) {
+        try {
+            $pdo->exec('ALTER TABLE orders ADD COLUMN admin_note TEXT NULL');
+        } catch (Throwable $e2) {
+            error_log('Softener Lab : ajout de la colonne `orders.admin_note` impossible — ' . $e2->getMessage());
+            return $ready = false;
+        }
+    }
+
+    return $ready = true;
 }
 
 function orders_unavailable_notice(): string {

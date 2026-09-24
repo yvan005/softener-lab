@@ -64,7 +64,12 @@ CREATE TABLE IF NOT EXISTS orders (
   brief TEXT NOT NULL,
   deadline DATE DEFAULT NULL,
   status ENUM('pending','in_progress','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  admin_note TEXT DEFAULT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Migration si la table `orders` existait déjà sans le message de l'admin au membre
+-- (ajoutée aussi automatiquement par l'espace membre) :
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS admin_note TEXT DEFAULT NULL;

@@ -1,6 +1,7 @@
 <?php
 // orders.php — espace membre : mes commandes de services + nouvelle commande
 require_once __DIR__ . '/includes/orders.php';
+require_once __DIR__ . '/includes/mailer.php';
 
 $user = require_member($pdo);
 $uid  = (int) $user['id'];
@@ -59,7 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              VALUES (?, ?, ?, ?, ?, ?, 'pending')"
         )->execute([$uid, $category, $service, $form['title'], $form['brief'], $deadline]);
         $id = (int) $pdo->lastInsertId();
-        flash_set('success', 'Commande ' . order_ref($id) . ' enregistrée. Nous revenons vers toi rapidement.');
+        $ref = order_ref($id);
+        // Prévient l'équipe ; un échec d'envoi ne doit jamais empêcher l'enregistrement de la commande.
+        notify_admin_new_order($user['full_name'], $user['email'], $id, $ref, $service, $form['title'], $form['brief'], $deadline);
+        flash_set('success', 'Commande ' . $ref . ' enregistrée. Nous revenons vers toi rapidement.');
         redirect('/order.php?id=' . $id);
     }
 }

@@ -115,6 +115,7 @@ async function syncAccountMenu() {
       <a href="/dashboard.php">${dict.nav.monEspace}</a>
       <a href="/orders.php">${dict.nav.mesCommandes || 'Mes commandes'}</a>
       <a href="/profile.php">${dict.nav.monProfil || 'Mon profil'}</a>
+      ${data.isAdmin ? `<a href="/admin.php">${dict.nav.administration || 'Administration'}</a>` : ''}
       <a href="/logout.php">${dict.nav.seDeconnecter}</a>
     `;
   }

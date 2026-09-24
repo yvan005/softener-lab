@@ -53,6 +53,13 @@ member_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . order_cat
       </ol>
     <?php endif; ?>
 
+    <?php if (!empty($order['admin_note'])): ?>
+      <div class="admin-note">
+        <strong>Message de Softener Lab</strong>
+        <p><?= nl2br(e($order['admin_note'])) ?></p>
+      </div>
+    <?php endif; ?>
+
     <div class="order-detail">
       <div class="content-card">
         <h3>Ton besoin</h3>
