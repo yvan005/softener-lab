@@ -15,6 +15,7 @@ export const translations = {
       seConnecter: 'Se connecter',
       creerCompte: 'Créer un compte',
       monEspace: 'Mon espace',
+      monProfil: 'Mon profil',
       seDeconnecter: 'Se déconnecter',
     },
     navDesign: {
@@ -163,6 +164,7 @@ export const translations = {
       seConnecter: 'Log in',
       creerCompte: 'Create an account',
       monEspace: 'My account',
+      monProfil: 'My profile',
       seDeconnecter: 'Log out',
     },
     navDesign: {
@@ -311,6 +313,7 @@ export const translations = {
       seConnecter: 'Iniciar sesión',
       creerCompte: 'Crear una cuenta',
       monEspace: 'Mi cuenta',
+      monProfil: 'Mi perfil',
       seDeconnecter: 'Cerrar sesión',
     },
     navDesign: {

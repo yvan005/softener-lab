@@ -123,3 +123,15 @@ Puis crée un dépôt vide sur GitHub et suis les instructions affichées pour l
 - [x] Espace membre : session régénérée à la connexion (anti-fixation), verrouillage du compte après 5 tentatives échouées (15 min), lien de confirmation d'email expirant au bout de 24h, cookies de session `httponly`/`SameSite`. ⚠️ Si la base est déjà en prod, exécute la section "Migration" en bas de `backend-php/sql/schema.sql` pour ajouter les nouvelles colonnes.
 - [ ] Espace membre — reste à faire : renvoi de l'email de confirmation, page "Mon profil".
 - [x] Espace membre : "mot de passe oublié" (`forgot-password.php` → email avec lien valable 1h → `reset-password.php`). Ne révèle jamais si un email a un compte ou non. Colonnes `reset_token` / `reset_token_expires` ajoutées à `users` (migration dans `schema.sql`).
+
+## Espace membre
+
+Pages PHP (dans `backend-php/`) réservées aux utilisateurs connectés :
+
+| Page | Rôle |
+|---|---|
+| `dashboard.php` | Statistiques, mes formations (accès actif / demande en cours), catalogue avec « Demander l'accès », annulation d'une demande en attente |
+| `profile.php` | Modifier son nom, changer son mot de passe, supprimer son compte |
+
+Briques communes : `includes/member.php` (gabarit, messages flash, vérification du mot de passe avec verrouillage) et `includes/csrf.php` (jeton CSRF sur tous les formulaires POST). Aucune modification de la base n'est nécessaire.
+Le style de l'espace membre est dans la dernière section de `src/style.css`.

@@ -104,11 +104,16 @@ async function syncAccountMenu() {
     const initial = firstName.charAt(0).toUpperCase();
     const dict = translations[getCurrentLang()] || translations.fr;
 
-    avatar.innerHTML = `<span class="account-initial">${initial}</span>`;
+    // textContent (et non innerHTML) : le nom vient de l'utilisateur, il ne doit jamais être interprété comme du HTML.
+    const initialEl = document.createElement('span');
+    initialEl.className = 'account-initial';
+    initialEl.textContent = initial;
+    avatar.replaceChildren(initialEl);
     avatar.classList.add('account-avatar--active');
     nameEl.textContent = firstName;
     menu.innerHTML = `
       <a href="/dashboard.php">${dict.nav.monEspace}</a>
+      <a href="/profile.php">${dict.nav.monProfil || 'Mon profil'}</a>
       <a href="/logout.php">${dict.nav.seDeconnecter}</a>
     `;
   }

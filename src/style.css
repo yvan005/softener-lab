@@ -556,3 +556,108 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
 .domain-card p{color:var(--muted-on-paper); font-size:0.94rem;}
 @media (max-width:860px){.domain-grid{grid-template-columns:1fr 1fr;}}
 @media (max-width:600px){.domain-grid{grid-template-columns:1fr;}}
+
+/* ============================================================
+   ESPACE MEMBRE (dashboard.php, profile.php)
+   ============================================================ */
+.member-area{padding:40px 0 90px;}
+
+.member-tabs{
+  display:flex; align-items:center; gap:4px; flex-wrap:wrap;
+  border-bottom:1px solid var(--paper-line); margin-bottom:32px;
+}
+.member-tab{
+  padding:12px 18px; font-size:0.92rem; font-weight:500; color:var(--muted-on-paper);
+  border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .15s ease, border-color .15s ease;
+}
+.member-tab:hover{color:var(--ink-on-paper);}
+.member-tab.is-active{color:var(--ink-on-paper); border-bottom-color:var(--green-on-paper);}
+.member-tab--logout{margin-left:auto; font-size:0.85rem;}
+
+.member-h2{font-family:var(--display); font-size:1.35rem; font-weight:600; letter-spacing:-0.01em; margin:44px 0 0;}
+.member-h2--box{font-size:1.15rem; margin:0 0 20px;}
+
+/* Messages */
+.alert{padding:14px 16px; border-radius:6px; margin-bottom:22px; font-size:0.92rem; border:1px solid;}
+.alert--success{background:rgba(46,204,113,0.12); border-color:rgba(46,204,113,0.35); color:#1e8449;}
+.alert--error{background:rgba(231,76,60,0.1); border-color:rgba(231,76,60,0.35); color:#c0392b;}
+.alert--info{background:rgba(52,152,219,0.1); border-color:rgba(52,152,219,0.3); color:#21618c;}
+
+/* Statistiques */
+.member-stats{display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;}
+.stat-card{
+  background:var(--paper-2); border:1px solid var(--paper-line); border-radius:6px;
+  padding:22px 26px; display:flex; flex-direction:column; gap:4px;
+}
+.stat-value{font-family:var(--display); font-size:2.2rem; font-weight:600; line-height:1.1; color:var(--green-on-paper);}
+.stat-value--text{font-size:1.25rem; line-height:1.6; color:var(--ink-on-paper);}
+.stat-label{font-family:var(--mono); font-size:0.75rem; color:var(--muted-on-paper);}
+
+/* Cartes de formation */
+.member-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:20px;}
+.training-card{display:flex; flex-direction:column; align-items:flex-start;}
+.training-card h3{margin-top:14px;}
+.training-card p{flex:1;}
+.training-card__foot{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  width:100%; margin-top:22px; padding-top:16px; border-top:1px solid var(--paper-line);
+}
+.training-card__date{font-size:0.82rem; color:var(--muted-on-paper);}
+
+.badge{
+  display:inline-flex; align-items:center; gap:7px; padding:4px 11px; border-radius:999px;
+  font-family:var(--mono); font-size:0.72rem; border:1px solid;
+}
+.badge::before{content:''; width:6px; height:6px; border-radius:50%; background:currentColor;}
+.badge--ok{background:rgba(30,154,92,0.12); border-color:rgba(30,154,92,0.35); color:var(--green-on-paper);}
+.badge--pending{background:rgba(230,160,30,0.14); border-color:rgba(230,160,30,0.4); color:#9a6a00;}
+.badge--neutral{background:transparent; border-color:var(--paper-line); color:var(--muted-on-paper);}
+.badge--neutral::before{display:none;}
+
+.empty-state{
+  margin-top:20px; padding:36px; text-align:center; border:1px dashed var(--paper-line);
+  border-radius:6px; color:var(--muted-on-paper);
+}
+.empty-state p + p{margin-top:6px;}
+.empty-state a{color:var(--green-on-paper); text-decoration:underline;}
+
+/* Boutons de l'espace membre */
+.member-area .btn-primary,
+.member-area .btn-outline,
+.member-area .btn-danger{cursor:pointer; font-family:var(--body); border:1px solid transparent;}
+.btn-small{padding:9px 16px !important; font-size:0.85rem !important;}
+.btn-outline{
+  background:transparent; color:var(--ink-on-paper); border-color:var(--paper-line) !important;
+  padding:12px 22px; border-radius:3px; font-weight:500; font-size:0.9rem;
+  transition:border-color .15s ease, color .15s ease;
+}
+.btn-outline:hover{border-color:var(--muted-on-paper) !important;}
+.btn-danger{
+  background:transparent; color:#c0392b; border-color:rgba(192,57,43,0.5) !important;
+  padding:12px 22px; border-radius:3px; font-weight:600; font-size:0.9rem;
+  transition:background .15s ease, color .15s ease;
+}
+.btn-danger:hover{background:#c0392b; color:#fff;}
+
+/* Page profil */
+.profile-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start;}
+.member-box{max-width:none; padding:32px;}
+.member-box .alert{margin-bottom:18px;}
+.form-hint{font-size:0.82rem; color:var(--muted-on-paper); margin-top:6px;}
+.form-hint a{text-decoration:underline;}
+.form-hint--spaced{margin:0 0 20px;}
+.form-row input:disabled{background:var(--paper); color:var(--muted-on-paper); cursor:not-allowed;}
+.danger-zone{margin-top:24px; border-color:rgba(192,57,43,0.35);}
+.danger-zone .form-row{max-width:360px;}
+.check-row{display:flex; align-items:flex-start; gap:10px; margin-bottom:20px; font-size:0.9rem; cursor:pointer;}
+.check-row input{margin-top:4px; accent-color:#c0392b;}
+
+@media (max-width:1000px){
+  .member-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:700px){
+  .member-area{padding:28px 0 70px;}
+  .member-stats, .member-grid, .profile-grid{grid-template-columns:1fr;}
+  .member-box{padding:24px;}
+  .member-tab--logout{margin-left:0;}
+}

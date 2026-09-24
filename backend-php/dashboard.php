@@ -1,64 +1,148 @@
 <?php
-// dashboard.php
-require_once __DIR__ . '/includes/session.php';
-require_once __DIR__ . '/includes/db.php';
+// dashboard.php — espace membre : mes formations + catalogue
+require_once __DIR__ . '/includes/member.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: /login.php');
-    exit;
+$user = require_member($pdo);
+$uid  = (int) $user['id'];
+
+/* --- Actions (POST + jeton CSRF), puis redirection pour éviter le double envoi --- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!csrf_valid()) {
+        flash_set('error', 'Ta session a expiré. Réessaie.');
+        redirect('/dashboard.php');
+    }
+
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'request') {
+        $tid = (int) ($_POST['training_id'] ?? 0);
+        $stmt = $pdo->prepare('SELECT name FROM trainings WHERE id = ?');
+        $stmt->execute([$tid]);
+        $training = $stmt->fetch();
+
+        if (!$training) {
+            flash_set('error', "Cette formation n'existe pas.");
+        } else {
+            $stmt = $pdo->prepare('SELECT id FROM purchases WHERE user_id = ? AND training_id = ?');
+            $stmt->execute([$uid, $tid]);
+            if ($stmt->fetch()) {
+                flash_set('info', 'Cette formation est déjà associée à ton compte.');
+            } else {
+                $pdo->prepare('INSERT INTO purchases (user_id, training_id, status) VALUES (?, ?, \'pending\')')
+                    ->execute([$uid, $tid]);
+                flash_set('success', 'Demande envoyée pour « ' . $training['name'] . ' ». Nous revenons vers toi rapidement.');
+            }
+        }
+    } elseif ($action === 'cancel') {
+        $pid = (int) ($_POST['purchase_id'] ?? 0);
+        $del = $pdo->prepare('DELETE FROM purchases WHERE id = ? AND user_id = ? AND status = \'pending\'');
+        $del->execute([$pid, $uid]);
+        if ($del->rowCount() > 0) {
+            flash_set('success', 'Ta demande a été annulée.');
+        } else {
+            flash_set('error', "Impossible d'annuler cette demande.");
+        }
+    }
+
+    redirect('/dashboard.php');
 }
 
+/* --- Données --- */
 $stmt = $pdo->prepare(
-    'SELECT t.name, t.description, p.status, p.purchased_at
+    'SELECT p.id, t.name, t.description, p.status, p.purchased_at
      FROM purchases p
      JOIN trainings t ON t.id = p.training_id
      WHERE p.user_id = ?
      ORDER BY p.purchased_at DESC'
 );
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$uid]);
 $purchases = $stmt->fetchAll();
+
+$stmt = $pdo->prepare(
+    'SELECT id, name, description, price_eur
+     FROM trainings
+     WHERE id NOT IN (SELECT training_id FROM purchases WHERE user_id = ?)
+     ORDER BY name'
+);
+$stmt->execute([$uid]);
+$catalog = $stmt->fetchAll();
+
+$active  = count(array_filter($purchases, fn($p) => $p['status'] === 'paid'));
+$pending = count($purchases) - $active;
+$first   = explode(' ', trim($user['full_name']))[0];
+
+member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes formations, suis tes demandes et découvre le catalogue.', 'dashboard');
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mon espace — Softener Lab</title>
-<link rel="stylesheet" href="/assets/main.css">
-</head>
-<body>
 
-<header id="site-header"></header>
+    <div class="member-stats">
+      <div class="stat-card">
+        <span class="stat-value"><?= $active ?></span>
+        <span class="stat-label"><?= plural($active, 'Formation active', 'Formations actives') ?></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value"><?= $pending ?></span>
+        <span class="stat-label"><?= plural($pending, 'Demande en cours', 'Demandes en cours') ?></span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value stat-value--text"><?= e(fr_date($user['created_at'])) ?></span>
+        <span class="stat-label">Membre depuis</span>
+      </div>
+    </div>
 
-<section class="page-header">
-  <div class="wrap">
-    <div class="eyebrow-line"><span class="dot"></span> ESPACE MEMBRE</div>
-    <h1>Bonjour <?= htmlspecialchars($_SESSION['user_name']) ?></h1>
-    <p>Voici les formations associées à ton compte. <a href="/logout.php" style="text-decoration:underline; color:var(--green);">Se déconnecter</a></p>
-  </div>
-</section>
-
-<section class="services">
-  <div class="wrap">
+    <h2 class="member-h2">Mes formations</h2>
     <?php if (empty($purchases)): ?>
-      <p style="color:var(--muted-on-paper);">Tu n'as pas encore de formation associée à ton compte.</p>
+      <div class="empty-state">
+        <p>Tu n'as pas encore de formation associée à ton compte.</p>
+        <?php if (!empty($catalog)): ?>
+          <p>Choisis-en une dans le catalogue ci-dessous, ou <a href="/formations.html">découvre nos parcours</a>.</p>
+        <?php else: ?>
+          <p><a href="/formations.html">Découvre nos parcours</a>.</p>
+        <?php endif; ?>
+      </div>
     <?php else: ?>
-      <div class="content-grid">
-        <?php foreach ($purchases as $p): ?>
-          <div class="content-card">
-            <h3><?= htmlspecialchars($p['name']) ?></h3>
-            <p><?= htmlspecialchars($p['description']) ?></p>
-            <p style="margin-top:10px; font-size:0.85rem;">
-              Statut : <?= $p['status'] === 'paid' ? 'Accès actif' : 'En attente de paiement' ?>
-            </p>
-          </div>
+      <div class="member-grid">
+        <?php foreach ($purchases as $p): $isPaid = $p['status'] === 'paid'; ?>
+          <article class="content-card training-card">
+            <span class="badge <?= $isPaid ? 'badge--ok' : 'badge--pending' ?>">
+              <?= $isPaid ? 'Accès actif' : 'Demande en cours' ?>
+            </span>
+            <h3><?= e($p['name']) ?></h3>
+            <p><?= e($p['description']) ?></p>
+            <div class="training-card__foot">
+              <span class="training-card__date"><?= $isPaid ? 'Depuis' : 'Demandée' ?> le <?= e(fr_date($p['purchased_at'])) ?></span>
+              <?php if (!$isPaid): ?>
+                <form method="post" action="/dashboard.php">
+                  <?= csrf_field() ?>
+                  <input type="hidden" name="action" value="cancel">
+                  <input type="hidden" name="purchase_id" value="<?= (int) $p['id'] ?>">
+                  <button type="submit" class="btn-outline btn-small">Annuler</button>
+                </form>
+              <?php endif; ?>
+            </div>
+          </article>
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
-  </div>
-</section>
 
-<footer id="site-footer"></footer>
-<script type="module" src="/assets/main.js"></script>
-</body>
-</html>
+    <?php if (!empty($catalog)): ?>
+      <h2 class="member-h2">Catalogue</h2>
+      <div class="member-grid">
+        <?php foreach ($catalog as $t): ?>
+          <article class="content-card training-card">
+            <span class="badge badge--neutral"><?= e(price_label($t['price_eur'])) ?></span>
+            <h3><?= e($t['name']) ?></h3>
+            <p><?= e($t['description']) ?></p>
+            <div class="training-card__foot">
+              <form method="post" action="/dashboard.php">
+                <?= csrf_field() ?>
+                <input type="hidden" name="action" value="request">
+                <input type="hidden" name="training_id" value="<?= (int) $t['id'] ?>">
+                <button type="submit" class="btn-primary btn-small">Demander l'accès</button>
+              </form>
+            </div>
+          </article>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+
+<?php member_page_end(); ?>
