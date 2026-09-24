@@ -50,3 +50,21 @@ INSERT INTO trainings (slug, name, description, price_eur) VALUES
 ('montage-video', 'Montage vidéo', 'Rythme, étalonnage, export multi-plateformes', 0),
 ('cybersecurite-bases', 'Cybersécurité — Les bases', 'Hygiène numérique, phishing, sauvegardes', 0),
 ('cybersecurite-audit', 'Cybersécurité — Audit & pentest', 'Méthodologie d''audit, tests d''intrusion encadrés', 0);
+
+
+-- Commandes de services (design, développement, cybersécurité, flyers…), hors formations.
+-- Statuts : pending (reçue) -> in_progress (en cours) -> delivered (livrée), ou cancelled (annulée).
+-- Cette table est aussi créée automatiquement par l'espace membre si elle est absente.
+CREATE TABLE IF NOT EXISTS orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  category VARCHAR(30) NOT NULL,
+  service VARCHAR(100) NOT NULL,
+  title VARCHAR(150) NOT NULL,
+  brief TEXT NOT NULL,
+  deadline DATE DEFAULT NULL,
+  status ENUM('pending','in_progress','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

@@ -131,7 +131,11 @@ Pages PHP (dans `backend-php/`) réservées aux utilisateurs connectés :
 | Page | Rôle |
 |---|---|
 | `dashboard.php` | Statistiques, mes formations (accès actif / demande en cours), catalogue avec « Demander l'accès », annulation d'une demande en attente |
+| `orders.php` | Mes commandes de services (design, développement, cybersécurité, flyers) : liste filtrable + nouvelle commande |
+| `order.php` | Détail d'une commande : avancement (Reçue → En cours → Livrée), brief, annulation tant qu'elle est « Reçue » |
 | `profile.php` | Modifier son nom, changer son mot de passe, supprimer son compte |
 
-Briques communes : `includes/member.php` (gabarit, messages flash, vérification du mot de passe avec verrouillage) et `includes/csrf.php` (jeton CSRF sur tous les formulaires POST). Aucune modification de la base n'est nécessaire.
+Les commandes utilisent la table `orders` (créée automatiquement si absente, voir aussi `sql/schema.sql`) ; leur statut se change pour l'instant dans phpMyAdmin (`pending`, `in_progress`, `delivered`, `cancelled`).
+
+Briques communes : `includes/orders.php` (catalogue de services, statuts), `includes/member.php` (gabarit, messages flash, vérification du mot de passe avec verrouillage) et `includes/csrf.php` (jeton CSRF sur tous les formulaires POST). Aucune modification de la base n'est nécessaire.
 Le style de l'espace membre est dans la dernière section de `src/style.css`.

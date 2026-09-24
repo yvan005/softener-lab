@@ -1,6 +1,6 @@
 <?php
 // dashboard.php — espace membre : mes formations + catalogue
-require_once __DIR__ . '/includes/member.php';
+require_once __DIR__ . '/includes/orders.php';
 
 $user = require_member($pdo);
 $uid  = (int) $user['id'];
@@ -67,11 +67,28 @@ $stmt = $pdo->prepare(
 $stmt->execute([$uid]);
 $catalog = $stmt->fetchAll();
 
+/* Commandes de services (hors formations) */
+$ordersReady  = orders_ready($pdo);
+$openOrders   = 0;
+$recentOrders = [];
+if ($ordersReady) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE user_id = ? AND status IN ('pending','in_progress')");
+    $stmt->execute([$uid]);
+    $openOrders = (int) $stmt->fetchColumn();
+
+    $stmt = $pdo->prepare(
+        'SELECT id, category, service, title, status, created_at
+         FROM orders WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT 3'
+    );
+    $stmt->execute([$uid]);
+    $recentOrders = $stmt->fetchAll();
+}
+
 $active  = count(array_filter($purchases, fn($p) => $p['status'] === 'paid'));
 $pending = count($purchases) - $active;
 $first   = explode(' ', trim($user['full_name']))[0];
 
-member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes formations, suis tes demandes et découvre le catalogue.', 'dashboard');
+member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes commandes, tes formations et le catalogue.', 'dashboard');
 ?>
 
     <div class="member-stats">
@@ -81,13 +98,46 @@ member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes formations, s
       </div>
       <div class="stat-card">
         <span class="stat-value"><?= $pending ?></span>
-        <span class="stat-label"><?= plural($pending, 'Demande en cours', 'Demandes en cours') ?></span>
+        <span class="stat-label"><?= plural($pending, 'Demande de formation', 'Demandes de formation') ?></span>
       </div>
+      <?php if ($ordersReady): ?>
+        <div class="stat-card">
+          <span class="stat-value"><?= $openOrders ?></span>
+          <span class="stat-label"><?= plural($openOrders, 'Commande en cours', 'Commandes en cours') ?></span>
+        </div>
+      <?php endif; ?>
       <div class="stat-card">
         <span class="stat-value stat-value--text"><?= e(fr_date($user['created_at'])) ?></span>
         <span class="stat-label">Membre depuis</span>
       </div>
     </div>
+
+    <?php if ($ordersReady): ?>
+      <div class="section-head">
+        <h2 class="member-h2">Mes commandes</h2>
+        <?php if (!empty($recentOrders)): ?><a class="link-more" href="/orders.php">Tout voir →</a><?php endif; ?>
+      </div>
+      <?php if (empty($recentOrders)): ?>
+        <div class="empty-state">
+          <p>Tu n'as pas encore passé de commande de service (design, développement, cybersécurité, flyers…).</p>
+          <p><a href="/orders.php?new=1">Passer une commande</a></p>
+        </div>
+      <?php else: ?>
+        <div class="order-list">
+          <?php foreach ($recentOrders as $o): ?>
+            <a class="order-row" href="/order.php?id=<?= (int) $o['id'] ?>">
+              <span class="order-row__ref"><?= e(order_ref($o['id'])) ?></span>
+              <span class="order-row__main">
+                <span class="order-row__title"><?= e($o['title']) ?></span>
+                <span class="order-row__meta"><?= e(order_category_label($o['category'])) ?> · <?= e($o['service']) ?> · <?= e(fr_date($o['created_at'])) ?></span>
+              </span>
+              <?= order_badge($o['status']) ?>
+            </a>
+          <?php endforeach; ?>
+        </div>
+        <p style="margin-top:16px;"><a class="link-more" href="/orders.php?new=1">+ Nouvelle commande</a></p>
+      <?php endif; ?>
+    <?php endif; ?>
 
     <h2 class="member-h2">Mes formations</h2>
     <?php if (empty($purchases)): ?>

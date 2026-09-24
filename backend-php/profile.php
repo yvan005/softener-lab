@@ -133,7 +133,7 @@ member_page_start('Mon profil', 'Mon profil', 'Gère tes informations personnell
 
     <form class="form-box member-box danger-zone" method="post" action="/profile.php">
       <h2 class="member-h2 member-h2--box">Supprimer mon compte</h2>
-      <p class="form-hint form-hint--spaced">Cette action est définitive : ton compte et l'historique de tes formations seront effacés.</p>
+      <p class="form-hint form-hint--spaced">Cette action est définitive : ton compte, tes formations et tes commandes seront effacés.</p>
       <?php render_errors($errors['delete']); ?>
       <?= csrf_field() ?>
       <input type="hidden" name="action" value="delete_account">

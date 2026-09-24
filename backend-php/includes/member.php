@@ -104,7 +104,8 @@ function price_label($price): string {
 
 function member_page_start(string $title, string $h1, string $lead, string $active): void {
     $tabs = [
-        'dashboard' => ['/dashboard.php', 'Mes formations'],
+        'dashboard' => ['/dashboard.php', 'Tableau de bord'],
+        'orders'    => ['/orders.php',    'Mes commandes'],
         'profile'   => ['/profile.php',   'Mon profil'],
     ];
     ?>
