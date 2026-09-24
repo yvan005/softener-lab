@@ -41,3 +41,45 @@ function send_verification_email(string $toEmail, string $toName, string $token)
         return false;
     }
 }
+
+function send_contact_email(string $name, string $email, string $company, string $service, string $message): bool
+{
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+        $mail->CharSet    = 'UTF-8';
+
+        // Le message arrive dans la boîte de Softener Lab, avec le
+        // visiteur en Reply-To pour pouvoir lui répondre directement.
+        $mail->setFrom(SMTP_FROM, SMTP_FROM_NAME);
+        $mail->addAddress(SMTP_FROM, SMTP_FROM_NAME);
+        $mail->addReplyTo($email, $name);
+
+        $safeName    = htmlspecialchars($name);
+        $safeCompany = htmlspecialchars($company !== '' ? $company : '—');
+        $safeService = htmlspecialchars($service !== '' ? $service : '—');
+        $safeMessage = nl2br(htmlspecialchars($message));
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Nouveau message de contact — ' . ($service !== '' ? $service : 'Site web');
+        $mail->Body    = "Nouveau message depuis le formulaire de contact du site :<br><br>
+            <strong>Nom :</strong> {$safeName}<br>
+            <strong>Entreprise :</strong> {$safeCompany}<br>
+            <strong>Email :</strong> " . htmlspecialchars($email) . "<br>
+            <strong>Service concerné :</strong> {$safeService}<br><br>
+            <strong>Message :</strong><br>{$safeMessage}";
+        $mail->AltBody = "Nom: {$name}\nEntreprise: {$company}\nEmail: {$email}\nService: {$service}\n\nMessage:\n{$message}";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log('Erreur envoi email contact: ' . $mail->ErrorInfo);
+        return false;
+    }
+}

@@ -19,7 +19,8 @@
 
 <section class="form-section">
   <div class="wrap">
-    <form class="form-box">
+    <form class="form-box" id="contact-form" method="post" action="/contact.php">
+      <div class="form-feedback" id="contact-feedback" hidden></div>
       <div class="form-row">
         <label for="name">Nom complet</label>
         <input type="text" id="name" name="name" required>
@@ -35,11 +36,54 @@
       <div class="form-row">
         <label for="service">Service concerné</label>
         <select id="service" name="service">
-          <option>Formations</option>
-          <option>Design & infographie</option>
-          <option>Développement d'applications</option>
-          <option>Cybersécurité</option>
-          <option>Flyers & templates</option>
+          <optgroup label="Formations">
+            <option>Formations (vue d'ensemble)</option>
+            <option>Formation Bureautique</option>
+            <option>Formation Cybersécurité</option>
+            <option>Formation Graphique & Design</option>
+            <option>Formation Programmation Python</option>
+            <option>Formation SEO International</option>
+          </optgroup>
+          <optgroup label="Design & infographie">
+            <option>Design & infographie (vue d'ensemble)</option>
+            <option>Design graphique</option>
+            <option>Design web / UX-UI</option>
+            <option>Design réseaux sociaux</option>
+            <option>Motion design</option>
+            <option>Illustration</option>
+            <option>Design de packaging</option>
+            <option>Design d'espace / intérieur</option>
+          </optgroup>
+          <optgroup label="Développement d'applications">
+            <option>Développement d'applications (vue d'ensemble)</option>
+            <option>Applications web</option>
+            <option>Applications mobiles</option>
+            <option>Logiciels métier</option>
+          </optgroup>
+          <optgroup label="Cybersécurité">
+            <option>Cybersécurité (vue d'ensemble)</option>
+            <option>Audit de sécurité</option>
+            <option>Test d'intrusion</option>
+            <option>Conseil et stratégie</option>
+            <option>Formation et sensibilisation</option>
+            <option>Sécurité réseau</option>
+            <option>Réponse à incident</option>
+            <option>Sécurité cloud</option>
+            <option>Sécurité des applications</option>
+          </optgroup>
+          <optgroup label="Flyers & templates">
+            <option>Flyers & templates (vue d'ensemble)</option>
+            <option>Modèle Événementiel</option>
+            <option>Modèle Promotion</option>
+            <option>Modèle Annonces</option>
+            <option>Modèle Recrutement</option>
+            <option>Modèle Associatif</option>
+            <option>Modèle Restaurant / Menu</option>
+            <option>Modèle Informatif / Éducatif</option>
+            <option>Modèle Politique</option>
+            <option>Modèle Invitation</option>
+            <option>Modèle Coupon / Réduction</option>
+          </optgroup>
           <option>Autre / plusieurs services</option>
         </select>
       </div>

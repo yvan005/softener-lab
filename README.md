@@ -117,6 +117,6 @@ Puis crée un dépôt vide sur GitHub et suis les instructions affichées pour l
 ## À faire avant la mise en production
 
 - [ ] Remplacer le contenu placeholder des pages de service (portfolio, tarifs réels) par du contenu définitif.
-- [ ] Connecter le formulaire de `contact.html` à un service comme [Formspree](https://formspree.io) ou les "Netlify Forms" pour recevoir réellement les messages (actuellement le formulaire ne fait qu'afficher les champs, il n'envoie rien).
+- [x] Formulaire de `contact.html` connecté : il envoie un email via PHPMailer (`backend-php/contact.php`, réutilise la config SMTP déjà en place pour les comptes utilisateurs). Le message arrive dans la boîte définie par `SMTP_FROM`, avec le visiteur en Reply-To.
 - [ ] Remplacer les liens `#` du footer (LinkedIn, Instagram) par tes vrais profils.
 - [ ] Ajouter un favicon et les balises meta pour le référencement (titre, description) propres à chaque page.

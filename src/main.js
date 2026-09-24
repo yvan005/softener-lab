@@ -89,28 +89,41 @@ async function syncAccountMenu() {
   const avatar = document.getElementById('account-avatar');
   const nameEl = document.getElementById('account-name');
   const menu = document.getElementById('account-nav-menu');
-  if (!avatar || !nameEl || !menu) return;
 
+  let data = null;
   try {
     const res = await fetch('/session-status.php', { credentials: 'same-origin' });
-    const data = await res.json();
-
-    if (data.loggedIn) {
-      const firstName = (data.name || '').split(' ')[0] || 'Mon compte';
-      const initial = firstName.charAt(0).toUpperCase();
-      const dict = translations[getCurrentLang()] || translations.fr;
-
-      avatar.innerHTML = `<span class="account-initial">${initial}</span>`;
-      avatar.classList.add('account-avatar--active');
-      nameEl.textContent = firstName;
-      menu.innerHTML = `
-        <a href="/dashboard.php">${dict.nav.monEspace}</a>
-        <a href="/logout.php">${dict.nav.seDeconnecter}</a>
-      `;
-    }
+    data = await res.json();
   } catch (e) {
     // Si l'appel échoue, on garde l'icône et le menu par défaut (visiteur non connecté).
+    return;
   }
+
+  if (avatar && nameEl && menu && data && data.loggedIn) {
+    const firstName = (data.name || '').split(' ')[0] || 'Mon compte';
+    const initial = firstName.charAt(0).toUpperCase();
+    const dict = translations[getCurrentLang()] || translations.fr;
+
+    avatar.innerHTML = `<span class="account-initial">${initial}</span>`;
+    avatar.classList.add('account-avatar--active');
+    nameEl.textContent = firstName;
+    menu.innerHTML = `
+      <a href="/dashboard.php">${dict.nav.monEspace}</a>
+      <a href="/logout.php">${dict.nav.seDeconnecter}</a>
+    `;
+  }
+
+  prefillContactUser(data);
+}
+
+function prefillContactUser(data) {
+  const form = document.getElementById('contact-form');
+  if (!form || !data || !data.loggedIn) return;
+
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  if (nameInput && !nameInput.value) nameInput.value = data.name || '';
+  if (emailInput && !emailInput.value) emailInput.value = data.email || '';
 }
 
 function prefillContactService() {
@@ -125,6 +138,66 @@ function prefillContactService() {
   if (matches) select.value = wanted;
 }
 
+function mountContactForm() {
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+
+  const feedback = document.getElementById('contact-feedback');
+  const button = form.querySelector('button[type="submit"]');
+  const defaultLabel = button ? button.textContent : '';
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (feedback) {
+      feedback.hidden = true;
+      feedback.className = 'form-feedback';
+      feedback.textContent = '';
+    }
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Envoi en cours…';
+    }
+
+    try {
+      const response = await fetch('/contact.php', {
+        method: 'POST',
+        body: new FormData(form),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        form.reset();
+        if (feedback) {
+          feedback.hidden = false;
+          feedback.className = 'form-feedback is-success';
+          feedback.textContent = "Merci, votre message a bien été envoyé. On revient vers vous sous 48 heures.";
+        }
+      } else {
+        const errors = Array.isArray(data.errors) && data.errors.length
+          ? data.errors.join(' ')
+          : "Une erreur est survenue. Merci de réessayer.";
+        if (feedback) {
+          feedback.hidden = false;
+          feedback.className = 'form-feedback is-error';
+          feedback.textContent = errors;
+        }
+      }
+    } catch (err) {
+      if (feedback) {
+        feedback.hidden = false;
+        feedback.className = 'form-feedback is-error';
+        feedback.textContent = "Impossible d'envoyer le message pour le moment. Réessaie dans un instant.";
+      }
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = defaultLabel;
+      }
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   mountLayout();
   initI18n();
@@ -134,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
   syncAccountMenu();
   mountBackToTop();
   prefillContactService();
+  mountContactForm();
 
   const heroCanvas = document.getElementById('hero-bg');
   if (heroCanvas) mountHeroBackground(heroCanvas);

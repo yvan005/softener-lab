@@ -18,8 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!$user['is_verified']) {
         $errors[] = "Confirme d'abord ton adresse email (vérifie ta boîte de réception).";
     } else {
-        $_SESSION['user_id']   = $user['id'];
-        $_SESSION['user_name'] = $user['full_name'];
+        $_SESSION['user_id']    = $user['id'];
+        $_SESSION['user_name']  = $user['full_name'];
+        $_SESSION['user_email'] = $user['email'];
         header('Location: /dashboard.php');
         exit;
     }
