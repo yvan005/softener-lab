@@ -122,6 +122,7 @@ nav{
   font-family:var(--mono); font-size:0.62rem; font-weight:700;
   display:flex; align-items:center; justify-content:center; line-height:1;
 }
+.notif-badge[hidden]{display:none;}
 .notif-panel{min-width:320px; max-width:340px; padding:0; right:0; left:auto;}
 .notif-panel__head{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
