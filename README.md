@@ -137,10 +137,13 @@ Pages PHP (dans `backend-php/`) réservées aux utilisateurs connectés :
 | `admin.php` | **Admin** : toutes les commandes (filtres par statut, recherche par membre, titre, service ou `CMD-0001`) |
 | `admin-order.php` | **Admin** : détail d'une commande, changement de statut, message au membre, email automatique |
 | `admin-trainings.php` | **Admin** : activer ou refuser les demandes d'accès aux formations (email automatique) |
+| `admin-contact-messages.php` | **Admin** : messages bruts des visiteurs non connectés (formulaire de contact), marquables comme lus |
 
 **Administration** : les comptes dont l'email figure dans `ADMIN_EMAILS` (`includes/config.template.php`, par défaut l'adresse d'envoi `SMTP_FROM`) voient un onglet « Administration ». Pour ajouter un admin : `define('ADMIN_EMAILS', [SMTP_FROM, 'toi@exemple.com']);` puis push. Le compte doit exister et avoir confirmé son email.
 
 **Emails automatiques** : l'équipe reçoit un email à chaque nouvelle commande ou demande de formation ; le membre reçoit un email à chaque changement de statut de sa commande (si la case « Prévenir le membre » est cochée) et quand sa demande de formation est activée ou refusée. Un échec d'envoi n'empêche jamais l'enregistrement.
+
+**Formulaire de contact (`contact.html`)** : pour un visiteur non connecté, la demande reste un simple email à l'équipe, en plus d'être archivée sur `/admin-contact-messages.php` et notifiée aux comptes admin dans la cloche. Pour un membre connecté, la même demande devient une commande de suivi (`orders`), visible dans « Mes commandes » et dans `/admin.php`, avec la même notification cloche + email aux admins que les commandes créées depuis `/orders.php`.
 
 Les commandes utilisent la table `orders` (créée automatiquement si absente, voir aussi `sql/schema.sql`) ; leur statut se change depuis `admin-order.php` (`pending`, `in_progress`, `delivered`, `cancelled`).
 

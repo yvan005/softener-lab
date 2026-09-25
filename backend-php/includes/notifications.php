@@ -81,6 +81,32 @@ function notify_all_users(PDO $pdo, string $type, string $title, string $message
     return count($ids);
 }
 
+/**
+ * Notifie en interne (cloche) les comptes administrateurs — ceux dont l'email
+ * figure dans ADMIN_EMAILS (includes/roles.php). Comme pour le tableau "Administration",
+ * le compte doit exister et avoir confirmé son email ; sinon la notification est
+ * simplement ignorée pour cette adresse (l'email à l'équipe reste envoyé en parallèle).
+ */
+function notify_admins(PDO $pdo, string $type, string $title, string $message, ?string $link = null): int {
+    if (!notifications_ready($pdo)) return 0;
+    $emails = admin_emails();
+    if (!$emails) return 0;
+
+    $placeholders = implode(',', array_fill(0, count($emails), '?'));
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE LOWER(email) IN ({$placeholders})");
+    $stmt->execute($emails);
+    $ids = array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN));
+    if (!$ids) return 0;
+
+    $stmt = $pdo->prepare('INSERT INTO notifications (user_id, type, title, message, link) VALUES (?, ?, ?, ?, ?)');
+    $title = mb_substr($title, 0, 150);
+    $message = mb_substr($message, 0, 500);
+    foreach ($ids as $uid) {
+        $stmt->execute([$uid, $type, $title, $message, $link]);
+    }
+    return count($ids);
+}
+
 function unread_notifications_count(PDO $pdo, int $userId): int {
     if (!notifications_ready($pdo)) return 0;
     $stmt = $pdo->prepare('SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0');
@@ -125,6 +151,8 @@ function notification_type_label(string $type): string {
         'order_status'    => 'Commande',
         'training_status' => 'Formation',
         'announcement'    => 'Annonce',
+        'contact_visitor' => 'Contact',
+        'admin_order'     => 'Commande',
         default           => 'Notification',
     };
 }

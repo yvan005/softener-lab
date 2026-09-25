@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS announcements (
 );
 
 -- Notifications internes des membres (cloche + page dédiée).
--- Types : order_status, training_status, announcement.
+-- Types : order_status, training_status, announcement, contact_visitor, admin_order.
 -- Cette table est aussi créée automatiquement par l'espace membre si elle est absente.
 CREATE TABLE IF NOT EXISTS notifications (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -97,4 +97,21 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_notifications_user (user_id, is_read, created_at)
+);
+
+-- Messages bruts envoyés par des visiteurs NON connectés depuis contact.html
+-- (les demandes des membres connectés via ce même formulaire deviennent des
+-- commandes dans `orders`, pas des lignes ici). Consultable sur
+-- /admin-contact-messages.php. Cette table est aussi créée automatiquement par
+-- l'espace membre si elle est absente.
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  company VARCHAR(150) DEFAULT NULL,
+  service VARCHAR(100) DEFAULT NULL,
+  message TEXT NOT NULL,
+  is_read TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_contact_messages_read (is_read, created_at)
 );

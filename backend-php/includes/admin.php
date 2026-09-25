@@ -17,6 +17,7 @@ function admin_page_start(string $title, string $h1, string $lead, string $activ
     $tabs = [
         'orders'        => ['/admin.php',              'Commandes'],
         'trainings'     => ['/admin-trainings.php',    'Demandes de formation'],
+        'contact'       => ['/admin-contact-messages.php', 'Messages de contact'],
         'announcements' => ['/admin-announcements.php', 'Annonces'],
         'member'        => ['/dashboard.php',          '← Espace membre'],
     ];

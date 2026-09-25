@@ -179,7 +179,7 @@ function mountContactForm() {
         if (feedback) {
           feedback.hidden = false;
           feedback.className = 'form-feedback is-success';
-          feedback.textContent = "Merci, votre message a bien été envoyé. On revient vers vous sous 48 heures.";
+          feedback.textContent = data.message || "Merci, votre message a bien été envoyé. On revient vers vous sous 48 heures.";
         }
       } else {
         const errors = Array.isArray(data.errors) && data.errors.length

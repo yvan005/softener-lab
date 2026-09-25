@@ -49,6 +49,22 @@ function order_find_service(string $value): ?array {
     return null;
 }
 
+/**
+ * Retrouve la catégorie d'un service à partir de son seul libellé (utilisé par
+ * contact.php, dont le <select> envoie juste le nom du service, pas "categorie|service").
+ * Renvoie [categorie, service] ou null si le libellé ne correspond à aucun service du catalogue
+ * (ex. options "(vue d'ensemble)" ou formations, qui n'existent pas comme commandes).
+ */
+function order_match_label(string $label): ?array {
+    if ($label === '') return null;
+    foreach (order_catalog() as $catKey => $cat) {
+        if (in_array($label, $cat['services'], true)) {
+            return [$catKey, $label];
+        }
+    }
+    return null;
+}
+
 function order_category_label(string $key): string {
     return order_catalog()[$key]['label'] ?? 'Autre';
 }
