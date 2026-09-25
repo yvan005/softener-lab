@@ -1,6 +1,7 @@
 <?php
 // orders.php — espace membre : mes commandes de services + nouvelle commande
 require_once __DIR__ . '/includes/orders.php';
+require_once __DIR__ . '/includes/notifications.php';
 require_once __DIR__ . '/includes/mailer.php';
 
 $user = require_member($pdo);
@@ -9,6 +10,17 @@ $ready = orders_ready($pdo);
 
 $errors = [];
 $form = ['service' => '', 'title' => '', 'brief' => '', 'deadline' => ''];
+
+/* Pré-remplissage depuis "Recommander ce service" (order.php). */
+if ($ready && $_SERVER['REQUEST_METHOD'] !== 'POST' && !empty($_GET['reorder'])) {
+    $stmt = $pdo->prepare('SELECT category, service, title, brief FROM orders WHERE id = ? AND user_id = ?');
+    $stmt->execute([(int) $_GET['reorder'], $uid]);
+    if ($src = $stmt->fetch()) {
+        $form['service'] = $src['category'] . '|' . $src['service'];
+        $form['title']   = $src['title'];
+        $form['brief']   = $src['brief'];
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
@@ -61,14 +73,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         )->execute([$uid, $category, $service, $form['title'], $form['brief'], $deadline]);
         $id = (int) $pdo->lastInsertId();
         $ref = order_ref($id);
+        log_order_event($pdo, $id, 'pending');
         // Prévient l'équipe ; un échec d'envoi ne doit jamais empêcher l'enregistrement de la commande.
         notify_admin_new_order($user['full_name'], $user['email'], $id, $ref, $service, $form['title'], $form['brief'], $deadline);
+        // Accusé de réception au membre : email + notification interne (sa propre cloche).
+        send_order_received_email($user['email'], $user['full_name'], $id, $ref, $form['title'], $service);
+        notify_user($pdo, $uid, 'order_status', 'Commande ' . $ref . ' reçue',
+            'Ta commande « ' . $form['title'] . ' » est enregistrée, en attente de prise en charge.', '/order.php?id=' . $id);
         flash_set('success', 'Commande ' . $ref . ' enregistrée. Nous revenons vers toi rapidement.');
         redirect('/order.php?id=' . $id);
     }
 }
 
-/* --- Liste + filtre --- */
+/* --- Liste + filtre + recherche --- */
 $allOrders = [];
 if ($ready) {
     $stmt = $pdo->prepare(
@@ -79,14 +96,27 @@ if ($ready) {
     $allOrders = $stmt->fetchAll();
 }
 
+$counts = ['all' => count($allOrders), 'open' => 0, 'delivered' => 0, 'cancelled' => 0];
+foreach ($allOrders as $o) {
+    if (in_array($o['status'], ['pending', 'in_progress'], true)) $counts['open']++;
+    elseif ($o['status'] === 'delivered') $counts['delivered']++;
+    elseif ($o['status'] === 'cancelled') $counts['cancelled']++;
+}
+
 $filters = ['all' => 'Toutes', 'open' => 'En cours', 'delivered' => 'Livrées', 'cancelled' => 'Annulées'];
 $filter = $_GET['status'] ?? 'all';
 if (!isset($filters[$filter])) $filter = 'all';
+$q = trim((string) ($_GET['q'] ?? ''));
 
-$orders = array_values(array_filter($allOrders, function ($o) use ($filter) {
-    if ($filter === 'open') return in_array($o['status'], ['pending', 'in_progress'], true);
-    if ($filter === 'delivered') return $o['status'] === 'delivered';
-    if ($filter === 'cancelled') return $o['status'] === 'cancelled';
+$orders = array_values(array_filter($allOrders, function ($o) use ($filter, $q) {
+    if ($filter === 'open' && !in_array($o['status'], ['pending', 'in_progress'], true)) return false;
+    if ($filter === 'delivered' && $o['status'] !== 'delivered') return false;
+    if ($filter === 'cancelled' && $o['status'] !== 'cancelled') return false;
+    if ($q !== '') {
+        if (preg_match('/^cmd-?0*(\d+)$/i', $q, $m)) return (int) $o['id'] === (int) $m[1];
+        $needle = mb_strtolower($q);
+        return str_contains(mb_strtolower($o['title']), $needle) || str_contains(mb_strtolower($o['service']), $needle);
+    }
     return true;
 }));
 
@@ -140,12 +170,18 @@ if (!$ready) {
     <?php if (!empty($allOrders)): ?>
       <div class="filter-chips" role="navigation" aria-label="Filtrer les commandes">
         <?php foreach ($filters as $key => $label): ?>
-          <a href="/orders.php<?= $key === 'all' ? '' : '?status=' . e($key) ?>" class="chip<?= $key === $filter ? ' is-active' : '' ?>"><?= e($label) ?></a>
+          <a href="/orders.php?status=<?= e($key) ?><?= $q !== '' ? '&amp;q=' . e(urlencode($q)) : '' ?>" class="chip<?= $key === $filter ? ' is-active' : '' ?>"><?= e($label) ?> (<?= (int) $counts[$key] ?>)</a>
         <?php endforeach; ?>
       </div>
 
+      <form class="admin-search" method="get" action="/orders.php">
+        <input type="hidden" name="status" value="<?= e($filter) ?>">
+        <input type="search" name="q" value="<?= e($q) ?>" placeholder="Rechercher : titre, service, CMD-0001…" aria-label="Rechercher une commande">
+        <button type="submit" class="btn-outline btn-small">Rechercher</button>
+      </form>
+
       <?php if (empty($orders)): ?>
-        <div class="empty-state"><p>Aucune commande dans cette catégorie.</p></div>
+        <div class="empty-state"><p>Aucune commande ne correspond.</p></div>
       <?php else: ?>
         <div class="order-list">
           <?php foreach ($orders as $o): ?>

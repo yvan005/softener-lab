@@ -24,6 +24,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_attempts INT NOT NULL DEFAULT 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS locked_until DATETIME DEFAULT NULL;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(64) DEFAULT NULL;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires DATETIME DEFAULT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at DATETIME DEFAULT NULL;
 
 CREATE TABLE IF NOT EXISTS trainings (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,6 +74,19 @@ CREATE TABLE IF NOT EXISTS orders (
 -- Migration si la table `orders` existait déjà sans le message de l'admin au membre
 -- (ajoutée aussi automatiquement par l'espace membre) :
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS admin_note TEXT DEFAULT NULL;
+
+-- Historique des commandes (une ligne par création ou changement de statut/message).
+-- Alimente le petit journal affiché sur /order.php et /admin-order.php.
+-- Cette table est aussi créée automatiquement par l'espace membre si elle est absente.
+CREATE TABLE IF NOT EXISTS order_events (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  status ENUM('pending','in_progress','delivered','cancelled') NOT NULL,
+  note TEXT DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  INDEX idx_order_events_order (order_id, created_at)
+);
 
 -- Annonces diffusées par l'admin à tous les membres (historique).
 -- Cette table est aussi créée automatiquement par l'espace membre si elle est absente.

@@ -1,6 +1,7 @@
 <?php
 // dashboard.php — espace membre : mes formations + catalogue
 require_once __DIR__ . '/includes/orders.php';
+require_once __DIR__ . '/includes/notifications.php';
 require_once __DIR__ . '/includes/mailer.php';
 
 $user = require_member($pdo);
@@ -32,6 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->prepare('INSERT INTO purchases (user_id, training_id, status) VALUES (?, ?, \'pending\')')
                     ->execute([$uid, $tid]);
                 notify_admin_training_request($user['full_name'], $user['email'], $training['name']);
+                notify_user($pdo, $uid, 'training_status', 'Demande envoyée',
+                    'Ta demande pour « ' . $training['name'] . ' » est enregistrée, en attente de validation.', '/dashboard.php');
+                send_training_requested_email($user['email'], $user['full_name'], $training['name']);
                 flash_set('success', 'Demande envoyée pour « ' . $training['name'] . ' ». Nous revenons vers toi rapidement.');
             }
         }

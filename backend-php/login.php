@@ -50,6 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id']    = $user['id'];
         $_SESSION['user_name']  = $user['full_name'];
         $_SESSION['user_email'] = $user['email'];
+
+        // Dernière connexion précédente (affichée sur /profile.php), avant de l'écraser.
+        // La colonne peut être absente si la migration sql/schema.sql n'a pas encore
+        // été rejouée : on ne bloque jamais la connexion pour ça.
+        $_SESSION['prev_login_at'] = $user['last_login_at'] ?? null;
+        try {
+            $pdo->prepare('UPDATE users SET last_login_at = NOW() WHERE id = ?')->execute([$user['id']]);
+        } catch (Throwable $e) {
+            // colonne `last_login_at` pas encore migrée — pas bloquant.
+        }
+
         header('Location: /dashboard.php');
         exit;
     }

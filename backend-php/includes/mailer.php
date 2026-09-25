@@ -240,6 +240,43 @@ function send_training_status_email(string $toEmail, string $toName, string $tra
     );
 }
 
+/** Email au membre juste après le dépôt d'une commande (accusé de réception). */
+function send_order_received_email(string $toEmail, string $toName, int $orderId, string $ref, string $title, string $service): bool
+{
+    $heading = 'Ta commande est bien enregistrée';
+    $sentence = 'Merci ! Nous avons bien reçu ta commande et revenons vers toi rapidement.';
+    $body = '<p>Bonjour ' . mail_h($toName) . ',</p><p>' . mail_h($sentence) . '</p>'
+          . '<p style="margin:16px 0;"><strong>' . mail_h($ref) . '</strong> — ' . mail_h($title)
+          . '<br><span style="color:#5B655E;">' . mail_h($service) . '</span></p>';
+
+    $link = SITE_URL . '/order.php?id=' . $orderId;
+    $alt  = "Bonjour {$toName},\n\n{$sentence}\n{$ref} — {$title} ({$service})\n\nVoir ma commande : {$link}";
+
+    return send_html_email(
+        $toEmail, $toName,
+        "[Softener Lab] {$ref} — Commande bien reçue",
+        email_layout($heading, $body, ['Voir ma commande', $link]),
+        $alt
+    );
+}
+
+/** Email au membre juste après une demande d'accès à une formation (accusé de réception). */
+function send_training_requested_email(string $toEmail, string $toName, string $trainingName): bool
+{
+    $heading = 'Ta demande est bien enregistrée';
+    $sentence = "Merci ! Nous avons bien reçu ta demande d'accès à la formation « {$trainingName} » et revenons vers toi rapidement.";
+    $body = '<p>Bonjour ' . mail_h($toName) . ',</p><p>' . mail_h($sentence) . '</p>';
+    $link = SITE_URL . '/dashboard.php';
+    $alt  = "Bonjour {$toName},\n\n{$sentence}\n\nMon espace : {$link}";
+
+    return send_html_email(
+        $toEmail, $toName,
+        '[Softener Lab] Demande bien reçue — ' . $trainingName,
+        email_layout($heading, $body, ['Ouvrir mon espace', $link]),
+        $alt
+    );
+}
+
 /** Prévient l'équipe (boîte d'envoi du site) d'une nouvelle commande. Le membre est en Reply-To. */
 function notify_admin_new_order(string $memberName, string $memberEmail, int $orderId, string $ref, string $service, string $title, string $brief, ?string $deadline): bool
 {

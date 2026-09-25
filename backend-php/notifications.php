@@ -22,7 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     redirect('/notifications.php');
 }
 
-$items = $ready ? get_notifications($pdo, $uid, 50) : [];
+const NOTIF_PAGE_SIZE = 20;
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$total = $ready ? total_notifications_count($pdo, $uid) : 0;
+$pages = max(1, (int) ceil($total / NOTIF_PAGE_SIZE));
+if ($page > $pages) $page = $pages;
+
+$items = $ready ? get_notifications($pdo, $uid, NOTIF_PAGE_SIZE, ($page - 1) * NOTIF_PAGE_SIZE) : [];
 $unread = $ready ? unread_notifications_count($pdo, $uid) : 0;
 
 member_page_start('Notifications', 'Notifications', 'Commandes, formations et annonces de Softener Lab.', 'notifications');
@@ -69,6 +75,15 @@ if (!$ready) {
           </div>
         <?php endforeach; ?>
       </div>
+
+      <?php if ($pages > 1): ?>
+        <nav class="pagination" aria-label="Pages de notifications">
+          <?php if ($page > 1): ?><a class="btn-outline btn-small" href="/notifications.php?page=<?= $page - 1 ?>">← Plus récentes</a><?php endif; ?>
+          <span class="pagination__status">Page <?= $page ?> / <?= $pages ?></span>
+          <?php if ($page < $pages): ?><a class="btn-outline btn-small" href="/notifications.php?page=<?= $page + 1 ?>">Plus anciennes →</a><?php endif; ?>
+        </nav>
+      <?php endif; ?>
     <?php endif; ?>
 
 <?php member_page_end(); ?>
+

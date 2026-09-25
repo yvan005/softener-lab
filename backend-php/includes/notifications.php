@@ -115,15 +115,23 @@ function unread_notifications_count(PDO $pdo, int $userId): int {
 }
 
 /** @return array<int, array<string, mixed>> */
-function get_notifications(PDO $pdo, int $userId, int $limit = 50): array {
+function get_notifications(PDO $pdo, int $userId, int $limit = 50, int $offset = 0): array {
     if (!notifications_ready($pdo)) return [];
     $limit = max(1, min(100, $limit));
+    $offset = max(0, $offset);
     $stmt = $pdo->prepare(
         "SELECT id, type, title, message, link, is_read, created_at
-         FROM notifications WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT {$limit}"
+         FROM notifications WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT {$limit} OFFSET {$offset}"
     );
     $stmt->execute([$userId]);
     return $stmt->fetchAll();
+}
+
+function total_notifications_count(PDO $pdo, int $userId): int {
+    if (!notifications_ready($pdo)) return 0;
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM notifications WHERE user_id = ?');
+    $stmt->execute([$userId]);
+    return (int) $stmt->fetchColumn();
 }
 
 function mark_notification_read(PDO $pdo, int $userId, int $id): void {

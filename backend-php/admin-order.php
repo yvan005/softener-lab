@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $pdo->prepare('UPDATE orders SET status = ? WHERE id = ?')->execute([$newStatus, $id]);
         }
+        log_order_event($pdo, $id, $newStatus, $note !== '' ? $note : null);
 
         $msg = $changed
             ? 'Statut mis à jour : ' . $statuses[$newStatus]['label'] . '.'
@@ -145,5 +146,20 @@ admin_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . $order['fu
         </dl>
       </aside>
     </div>
+
+    <?php $events = get_order_events($pdo, $id); if (!empty($events)): ?>
+      <div class="content-card" style="margin-top:24px;">
+        <h3>Historique</h3>
+        <ul class="order-history">
+          <?php foreach (array_reverse($events) as $ev): ?>
+            <li>
+              <span class="order-history__status"><?= e($statuses[$ev['status']]['label'] ?? $ev['status']) ?></span>
+              <span class="order-history__date"><?= e(fr_date($ev['created_at'])) ?> à <?= e(date('H:i', strtotime($ev['created_at']))) ?></span>
+              <?php if (!empty($ev['note'])): ?><p class="order-history__note"><?= nl2br(e($ev['note'])) ?></p><?php endif; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
 
 <?php member_page_end(); ?>

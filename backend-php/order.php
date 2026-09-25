@@ -26,8 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (($_POST['action'] ?? '') === 'cancel') {
         $upd = $pdo->prepare("UPDATE orders SET status = 'cancelled' WHERE id = ? AND user_id = ? AND status = 'pending'");
         $upd->execute([$id, $uid]);
-        if ($upd->rowCount() > 0) flash_set('success', 'Ta commande a été annulée.');
-        else flash_set('error', "Cette commande ne peut plus être annulée : elle est déjà prise en charge.");
+        if ($upd->rowCount() > 0) {
+            log_order_event($pdo, $id, 'cancelled', 'Annulée par le membre.');
+            flash_set('success', 'Ta commande a été annulée.');
+        } else {
+            flash_set('error', "Cette commande ne peut plus être annulée : elle est déjà prise en charge.");
+        }
     }
     redirect('/order.php?id=' . $id);
 }
@@ -37,6 +41,7 @@ $status = $order['status'];
 $steps = ['pending' => 'Reçue', 'in_progress' => 'En cours', 'delivered' => 'Livrée'];
 $stepKeys = array_keys($steps);
 $currentIndex = array_search($status, $stepKeys, true);
+$events = get_order_events($pdo, $id);
 
 member_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . order_category_label($order['category']), 'orders');
 ?>
@@ -88,8 +93,27 @@ member_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . order_cat
           </form>
         <?php elseif ($status === 'in_progress'): ?>
           <p class="form-hint">Nous travaillons sur ta commande. Une précision à ajouter ? <a href="/contact.html">Écris-nous</a>.</p>
+        <?php elseif (in_array($status, ['delivered', 'cancelled'], true)): ?>
+          <div class="order-actions">
+            <a class="btn-outline btn-small" href="/orders.php?new=1&amp;reorder=<?= (int) $order['id'] ?>">Recommander ce service</a>
+          </div>
         <?php endif; ?>
       </aside>
     </div>
+
+    <?php if (!empty($events)): ?>
+      <div class="content-card" style="margin-top:24px;">
+        <h3>Historique</h3>
+        <ul class="order-history">
+          <?php foreach (array_reverse($events) as $ev): ?>
+            <li>
+              <span class="order-history__status"><?= e(order_statuses()[$ev['status']]['label'] ?? $ev['status']) ?></span>
+              <span class="order-history__date"><?= e(fr_date($ev['created_at'])) ?> à <?= e(date('H:i', strtotime($ev['created_at']))) ?></span>
+              <?php if (!empty($ev['note'])): ?><p class="order-history__note"><?= nl2br(e($ev['note'])) ?></p><?php endif; ?>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
 
 <?php member_page_end(); ?>

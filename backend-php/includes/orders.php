@@ -147,3 +147,48 @@ function orders_ready(PDO $pdo): bool {
 function orders_unavailable_notice(): string {
     return '<div class="alert alert--info" role="status">Le suivi des commandes est momentanément indisponible. Réessaie un peu plus tard ou <a href="/contact.html" style="text-decoration:underline;">contacte-nous</a>.</div>';
 }
+
+/** Vrai si la table `order_events` (journal d'historique) est utilisable. */
+function order_events_ready(PDO $pdo): bool {
+    static $ready = null;
+    if ($ready !== null) return $ready;
+
+    try {
+        $pdo->query('SELECT 1 FROM order_events LIMIT 1');
+        return $ready = true;
+    } catch (Throwable $e) {
+        try {
+            $pdo->exec(
+                "CREATE TABLE IF NOT EXISTS order_events (
+                  id INT AUTO_INCREMENT PRIMARY KEY,
+                  order_id INT NOT NULL,
+                  status ENUM('pending','in_progress','delivered','cancelled') NOT NULL,
+                  note TEXT DEFAULT NULL,
+                  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+                  INDEX idx_order_events_order (order_id, created_at)
+                )"
+            );
+            $pdo->query('SELECT 1 FROM order_events LIMIT 1');
+            return $ready = true;
+        } catch (Throwable $e2) {
+            error_log('Softener Lab : table `order_events` introuvable et création impossible — importe sql/schema.sql. ' . $e2->getMessage());
+            return $ready = false;
+        }
+    }
+}
+
+/** Ajoute une ligne au journal d'une commande (création, changement de statut, message). */
+function log_order_event(PDO $pdo, int $orderId, string $status, ?string $note = null): void {
+    if (!order_events_ready($pdo)) return;
+    $pdo->prepare('INSERT INTO order_events (order_id, status, note) VALUES (?, ?, ?)')
+        ->execute([$orderId, $status, $note !== null && $note !== '' ? mb_substr($note, 0, 2000) : null]);
+}
+
+/** @return array<int, array<string, mixed>> Historique d'une commande, du plus ancien au plus récent. */
+function get_order_events(PDO $pdo, int $orderId): array {
+    if (!order_events_ready($pdo)) return [];
+    $stmt = $pdo->prepare('SELECT status, note, created_at FROM order_events WHERE order_id = ? ORDER BY created_at ASC, id ASC');
+    $stmt->execute([$orderId]);
+    return $stmt->fetchAll();
+}

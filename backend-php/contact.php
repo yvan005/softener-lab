@@ -111,6 +111,7 @@ if ($uid !== null && orders_ready($pdo)) {
     )->execute([$uid, $category, $orderService, $title, $brief]);
     $id = (int) $pdo->lastInsertId();
     $ref = order_ref($id);
+    log_order_event($pdo, $id, 'pending');
 
     // Prévient l'équipe : email + notification interne (cloche) aux comptes admin.
     notify_admin_new_order($user['full_name'], $user['email'], $id, $ref, $orderService, $title, $brief, null);
@@ -121,6 +122,10 @@ if ($uid !== null && orders_ready($pdo)) {
         $ref . ' — ' . $title . ' (' . $orderService . ') par ' . $user['full_name'],
         '/admin-order.php?id=' . $id
     );
+    // Accusé de réception au membre : email + notification interne (sa propre cloche).
+    send_order_received_email($user['email'], $user['full_name'], $id, $ref, $title, $orderService);
+    notify_user($pdo, $uid, 'order_status', 'Commande ' . $ref . ' reçue',
+        'Ta demande « ' . $title . ' » est enregistrée, en attente de prise en charge.', '/order.php?id=' . $id);
 
     echo json_encode([
         'success' => true,

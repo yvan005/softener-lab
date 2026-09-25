@@ -105,6 +105,11 @@ member_page_start('Mon profil', 'Mon profil', 'Gère tes informations personnell
           <p class="form-hint">Pour changer d'adresse, <a href="/contact.html">contacte-nous</a>.</p>
         </div>
         <p class="form-hint form-hint--spaced">Membre depuis le <?= e(fr_date($user['created_at'])) ?>.</p>
+        <?php if (!empty($_SESSION['prev_login_at'])): ?>
+          <p class="form-hint">Connexion précédente : le <?= e(fr_date($_SESSION['prev_login_at'])) ?> à <?= e(date('H:i', strtotime($_SESSION['prev_login_at']))) ?>.</p>
+        <?php else: ?>
+          <p class="form-hint">C'est ta première connexion enregistrée.</p>
+        <?php endif; ?>
         <button type="submit" class="btn-primary">Enregistrer</button>
       </form>
 
@@ -133,7 +138,7 @@ member_page_start('Mon profil', 'Mon profil', 'Gère tes informations personnell
 
     <form class="form-box member-box danger-zone" method="post" action="/profile.php">
       <h2 class="member-h2 member-h2--box">Supprimer mon compte</h2>
-      <p class="form-hint form-hint--spaced">Cette action est définitive : ton compte, tes formations et tes commandes seront effacés.</p>
+      <p class="form-hint form-hint--spaced">Cette action est définitive : ton compte, tes formations et tes commandes seront effacés. <a href="/export-data.php" style="text-decoration:underline;">Télécharge tes données</a> avant de continuer si tu veux en garder une trace.</p>
       <?php render_errors($errors['delete']); ?>
       <?= csrf_field() ?>
       <input type="hidden" name="action" value="delete_account">
