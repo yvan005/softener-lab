@@ -115,6 +115,26 @@ export function renderHeader() {
           </div>
         </div>
 
+        <div class="nav-item nav-item--notif" id="notif-nav-item" data-nav="notif" hidden>
+          <button type="button" aria-expanded="false" id="notif-nav-button" aria-label="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M5 17h14l-1.6-2.4A5 5 0 0 1 16.6 12V10a4.6 4.6 0 0 0-9.2 0v2a5 5 0 0 1-.8 2.6L5 17Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M10 20a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span class="notif-badge" id="notif-badge" hidden>0</span>
+          </button>
+          <div class="simple-menu notif-panel" id="notif-panel">
+            <div class="notif-panel__head">
+              <span>Notifications</span>
+              <button type="button" class="notif-mark-all" id="notif-mark-all">Tout marquer comme lu</button>
+            </div>
+            <div class="notif-list" id="notif-list">
+              <p class="notif-empty">Aucune notification.</p>
+            </div>
+            <a href="/notifications.php" class="notif-panel__footer">Voir toutes les notifications</a>
+          </div>
+        </div>
+
         <div class="nav-item" data-nav="account">
           <button type="button" aria-expanded="false" id="account-nav-button">
             <span class="account-avatar" id="account-avatar">

@@ -15,9 +15,10 @@ function require_admin(PDO $pdo): array {
 
 function admin_page_start(string $title, string $h1, string $lead, string $active): void {
     $tabs = [
-        'orders'    => ['/admin.php',           'Commandes'],
-        'trainings' => ['/admin-trainings.php', 'Demandes de formation'],
-        'member'    => ['/dashboard.php',       '← Espace membre'],
+        'orders'        => ['/admin.php',              'Commandes'],
+        'trainings'     => ['/admin-trainings.php',    'Demandes de formation'],
+        'announcements' => ['/admin-announcements.php', 'Annonces'],
+        'member'        => ['/dashboard.php',          '← Espace membre'],
     ];
     page_start($title, $h1, $lead, $tabs, $active, 'ADMINISTRATION');
 }

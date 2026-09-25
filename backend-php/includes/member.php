@@ -105,9 +105,10 @@ function price_label($price): string {
 
 function member_page_start(string $title, string $h1, string $lead, string $active): void {
     $tabs = [
-        'dashboard' => ['/dashboard.php', 'Tableau de bord'],
-        'orders'    => ['/orders.php',    'Mes commandes'],
-        'profile'   => ['/profile.php',   'Mon profil'],
+        'dashboard'     => ['/dashboard.php',     'Tableau de bord'],
+        'orders'        => ['/orders.php',        'Mes commandes'],
+        'notifications' => ['/notifications.php', 'Notifications'],
+        'profile'       => ['/profile.php',       'Mon profil'],
     ];
     if (is_admin_email($_SESSION['user_email'] ?? '')) {
         $tabs['admin'] = ['/admin.php', 'Administration'];

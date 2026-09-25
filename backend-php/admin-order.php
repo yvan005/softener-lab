@@ -2,6 +2,7 @@
 // admin-order.php — administration : détail d'une commande, changement de statut + email au membre
 require_once __DIR__ . '/includes/admin.php';
 require_once __DIR__ . '/includes/mailer.php';
+require_once __DIR__ . '/includes/notifications.php';
 
 $admin = require_admin($pdo);
 
@@ -57,6 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $msg = $changed
             ? 'Statut mis à jour : ' . $statuses[$newStatus]['label'] . '.'
             : 'Message enregistré.';
+
+        $notifTitle = 'Commande ' . $ref;
+        $notifBody  = $changed ? 'Nouveau statut : ' . $statuses[$newStatus]['label'] . '.' : 'Nouveau message reçu.';
+        if ($note !== '') $notifBody .= ' « ' . mb_substr($note, 0, 200) . ' »';
+        notify_user($pdo, (int) $order['user_id'], 'order_status', $notifTitle, $notifBody, '/order.php?id=' . $id);
 
         if ($notify) {
             $sent = send_order_status_email(

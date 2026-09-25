@@ -2,6 +2,7 @@
 // admin-trainings.php — administration : demandes d'accès aux formations
 require_once __DIR__ . '/includes/admin.php';
 require_once __DIR__ . '/includes/mailer.php';
+require_once __DIR__ . '/includes/notifications.php';
 
 $admin = require_admin($pdo);
 
@@ -18,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = (string) ($_POST['action'] ?? '');
 
     $stmt = $pdo->prepare(
-        'SELECT p.id, p.status, t.name AS training, u.full_name, u.email
+        'SELECT p.id, p.status, t.name AS training, u.id AS user_id, u.full_name, u.email
          FROM purchases p
          JOIN trainings t ON t.id = p.training_id
          JOIN users u ON u.id = p.user_id
@@ -31,12 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         flash_set('error', 'Demande introuvable.');
     } elseif ($action === 'activate' && $p['status'] === 'pending') {
         $pdo->prepare("UPDATE purchases SET status = 'paid' WHERE id = ?")->execute([$pid]);
+        notify_user($pdo, (int) $p['user_id'], 'training_status', 'Formation activée',
+            'Ton accès à « ' . $p['training'] . ' » est actif.', '/dashboard.php');
         $sent = send_training_status_email($p['email'], $p['full_name'], $p['training'], 'paid');
         flash_set($sent ? 'success' : 'error',
             'Accès activé pour ' . $p['full_name'] . ' (« ' . $p['training'] . ' »).'
             . ($sent ? ' Email envoyé.' : " Mais l'email n'a pas pu être envoyé (vérifie la configuration SMTP)."));
     } elseif ($action === 'reject' && $p['status'] === 'pending') {
         $pdo->prepare("DELETE FROM purchases WHERE id = ? AND status = 'pending'")->execute([$pid]);
+        notify_user($pdo, (int) $p['user_id'], 'training_status', 'Demande refusée',
+            'Ta demande pour « ' . $p['training'] . ' » a été refusée.', '/formations.html');
         $sent = send_training_status_email($p['email'], $p['full_name'], $p['training'], 'rejected');
         flash_set($sent ? 'success' : 'error',
             'Demande refusée pour ' . $p['full_name'] . ' (« ' . $p['training'] . ' »).'

@@ -73,3 +73,28 @@ CREATE TABLE IF NOT EXISTS orders (
 -- Migration si la table `orders` existait déjà sans le message de l'admin au membre
 -- (ajoutée aussi automatiquement par l'espace membre) :
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS admin_note TEXT DEFAULT NULL;
+
+-- Annonces diffusées par l'admin à tous les membres (historique).
+-- Cette table est aussi créée automatiquement par l'espace membre si elle est absente.
+CREATE TABLE IF NOT EXISTS announcements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(150) NOT NULL,
+  message VARCHAR(500) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Notifications internes des membres (cloche + page dédiée).
+-- Types : order_status, training_status, announcement.
+-- Cette table est aussi créée automatiquement par l'espace membre si elle est absente.
+CREATE TABLE IF NOT EXISTS notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  type VARCHAR(30) NOT NULL,
+  title VARCHAR(150) NOT NULL,
+  message VARCHAR(500) NOT NULL,
+  link VARCHAR(190) DEFAULT NULL,
+  is_read TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_notifications_user (user_id, is_read, created_at)
+);

@@ -115,6 +115,49 @@ nav{
 .lang-option:hover{background:var(--panel-2); color:var(--text);}
 .lang-option.lang-active{color:var(--green);}
 
+.nav-item--notif > button{position:relative; padding:10px 8px;}
+.notif-badge{
+  position:absolute; top:2px; right:0; min-width:16px; height:16px; padding:0 4px;
+  background:var(--green); color:var(--ink); border-radius:999px;
+  font-family:var(--mono); font-size:0.62rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center; line-height:1;
+}
+.notif-panel{min-width:320px; max-width:340px; padding:0; right:0; left:auto;}
+.notif-panel__head{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:12px 14px; border-bottom:1px solid var(--line); font-size:0.85rem; color:var(--text); font-weight:600;
+}
+.notif-mark-all{
+  background:none; border:none; font:inherit; font-size:0.75rem; font-weight:500;
+  color:var(--green); cursor:pointer; padding:0;
+}
+.notif-mark-all:hover{text-decoration:underline;}
+.notif-list{max-height:340px; overflow-y:auto; padding:6px;}
+.notif-empty{padding:20px 14px; text-align:center; font-size:0.85rem; color:var(--muted);}
+.notif-item{
+  display:flex; flex-direction:column; gap:3px; width:100%; text-align:left;
+  background:none; border:none; font:inherit; cursor:pointer; padding:10px 10px; border-radius:5px;
+  border-left:2px solid transparent;
+}
+.notif-item:hover{background:var(--panel-2);}
+.notif-item.is-unread{border-left-color:var(--green); background:rgba(61,220,132,0.06);}
+.notif-item__title{font-size:0.86rem; font-weight:600; color:var(--text);}
+.notif-item__msg{font-size:0.8rem; color:var(--muted); line-height:1.4; overflow-wrap:anywhere;}
+.notif-item__time{font-family:var(--mono); font-size:0.68rem; color:var(--muted);}
+.notif-panel__footer{
+  display:block; text-align:center; padding:10px 12px; font-size:0.8rem;
+  border-top:1px solid var(--line); color:var(--green) !important;
+}
+.notif-panel__footer:hover{background:var(--panel-2);}
+
+/* Page /notifications.php (fond clair de l'espace membre) */
+.order-row.notif-row{grid-template-columns:1fr auto; align-items:start;}
+.notif-row.is-unread{border-color:var(--green-on-paper); background:rgba(30,154,92,0.05);}
+.notif-row__actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+@media (max-width:700px){
+  .order-row.notif-row{grid-template-columns:1fr; justify-items:start;}
+}
+
 .nav-item[data-nav="account"] > button{
   flex-direction:column; gap:3px; padding:8px 12px;
 }
@@ -440,6 +483,19 @@ nav{
   font-family:var(--body); font-size:0.95rem; background:#fff; color:var(--ink-on-paper);
 }
 .form-row textarea{min-height:120px; resize:vertical;}
+
+/* Champ mot de passe avec icône afficher/masquer */
+.password-field{position:relative;}
+.password-field input{padding-right:44px !important;}
+.password-toggle{
+  position:absolute; top:50%; right:6px; transform:translateY(-50%);
+  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  background:none; border:none; padding:0; cursor:pointer; color:var(--muted-on-paper);
+  border-radius:6px; transition:color .15s ease, background .15s ease;
+}
+.password-toggle:hover{color:var(--ink-on-paper); background:var(--paper-line);}
+.password-toggle:focus-visible{outline:2px solid var(--green-on-paper); outline-offset:2px;}
+.password-toggle svg{width:19px; height:19px; display:block;}
 
 /* CTA */
 .cta-final{padding:110px 0; text-align:left; border-bottom:1px solid var(--paper-line);}

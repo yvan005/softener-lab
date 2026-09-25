@@ -114,6 +114,7 @@ async function syncAccountMenu() {
     menu.innerHTML = `
       <a href="/dashboard.php">${dict.nav.monEspace}</a>
       <a href="/orders.php">${dict.nav.mesCommandes || 'Mes commandes'}</a>
+      <a href="/notifications.php">${dict.nav.notifications || 'Notifications'}</a>
       <a href="/profile.php">${dict.nav.monProfil || 'Mon profil'}</a>
       ${data.isAdmin ? `<a href="/admin.php">${dict.nav.administration || 'Administration'}</a>` : ''}
       <a href="/logout.php">${dict.nav.seDeconnecter}</a>
@@ -205,6 +206,129 @@ function mountContactForm() {
   });
 }
 
+const EYE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYE_OFF_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.9 10.9 0 0 1 12 5c7 0 10.5 7 10.5 7a13.4 13.4 0 0 1-3.1 4"/><path d="M6.6 6.6C3.4 8.5 1.5 12 1.5 12s3.5 7 10.5 7c1.3 0 2.5-.2 3.6-.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+
+function initPasswordToggles() {
+  document.querySelectorAll('input[type="password"]').forEach((input) => {
+    if (input.closest('.password-field')) return; // déjà traité
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'password-field';
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(input);
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'password-toggle';
+    btn.setAttribute('aria-label', 'Afficher le mot de passe');
+    btn.setAttribute('aria-pressed', 'false');
+    btn.tabIndex = 0;
+    btn.innerHTML = EYE_ICON;
+    wrapper.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      const willShow = input.type === 'password';
+      input.type = willShow ? 'text' : 'password';
+      btn.setAttribute('aria-pressed', willShow ? 'true' : 'false');
+      btn.setAttribute('aria-label', willShow ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+      btn.innerHTML = willShow ? EYE_OFF_ICON : EYE_ICON;
+    });
+  });
+}
+
+/* --- Cloche de notifications (header) --- */
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str ?? '';
+  return div.innerHTML;
+}
+
+function renderNotifItems(items) {
+  const list = document.getElementById('notif-list');
+  if (!list) return;
+
+  if (!items || items.length === 0) {
+    list.innerHTML = '<p class="notif-empty">Aucune notification.</p>';
+    return;
+  }
+
+  list.innerHTML = items.map((n) => `
+    <button type="button" class="notif-item${n.isRead ? '' : ' is-unread'}" data-id="${n.id}" data-link="${n.link ? escapeHtml(n.link) : ''}">
+      <span class="notif-item__title">${escapeHtml(n.title)}</span>
+      <span class="notif-item__msg">${escapeHtml(n.message)}</span>
+      <span class="notif-item__time">${escapeHtml(n.timeAgo)}</span>
+    </button>
+  `).join('');
+}
+
+async function notifAction(action, extra) {
+  const body = new URLSearchParams({ action, ...extra });
+  try {
+    const res = await fetch('/notifications-status.php', { method: 'POST', credentials: 'same-origin', body });
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+async function refreshNotifications() {
+  const navItem = document.getElementById('notif-nav-item');
+  const badge = document.getElementById('notif-badge');
+  if (!navItem || !badge) return;
+
+  let data = null;
+  try {
+    const res = await fetch('/notifications-status.php', { credentials: 'same-origin' });
+    data = await res.json();
+  } catch (e) {
+    return;
+  }
+
+  if (!data || !data.loggedIn) {
+    navItem.hidden = true;
+    return;
+  }
+
+  navItem.hidden = false;
+  if (data.count > 0) {
+    badge.hidden = false;
+    badge.textContent = data.count > 9 ? '9+' : String(data.count);
+  } else {
+    badge.hidden = true;
+  }
+  renderNotifItems(data.items);
+}
+
+function initNotifications() {
+  const navItem = document.getElementById('notif-nav-item');
+  const list = document.getElementById('notif-list');
+  const markAllBtn = document.getElementById('notif-mark-all');
+  if (!navItem || !list) return;
+
+  list.addEventListener('click', async (e) => {
+    const item = e.target.closest('.notif-item');
+    if (!item) return;
+    const id = item.dataset.id;
+    const link = item.dataset.link;
+    if (item.classList.contains('is-unread')) {
+      await notifAction('mark_read', { id });
+    }
+    if (link) window.location.href = link;
+    else refreshNotifications();
+  });
+
+  markAllBtn?.addEventListener('click', async () => {
+    await notifAction('mark_all', {});
+    refreshNotifications();
+  });
+
+  refreshNotifications();
+  // Rafraîchit le compteur périodiquement pour rester à jour sans recharger la page.
+  setInterval(refreshNotifications, 60000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   mountLayout();
   initI18n();
@@ -215,6 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
   mountBackToTop();
   prefillContactService();
   mountContactForm();
+  initPasswordToggles();
+  initNotifications();
 
   const heroCanvas = document.getElementById('hero-bg');
   if (heroCanvas) mountHeroBackground(heroCanvas);
