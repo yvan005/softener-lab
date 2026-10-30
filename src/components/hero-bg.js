@@ -164,5 +164,21 @@ export function mountHeroBackground(canvas) {
     cancelAnimationFrame(frameId);
   } else {
     frame();
+
+    // Économie de ressources : on suspend la boucle (et les animations CSS du hero)
+    // tant que le hero n'est pas visible à l'écran.
+    const hero = canvas.parentElement;
+    const stop = () => {
+      if (frameId !== null) { cancelAnimationFrame(frameId); frameId = null; }
+    };
+    const start = () => {
+      if (frameId === null) frameId = requestAnimationFrame(frame);
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        hero.classList.toggle('is-offscreen', !entry.isIntersecting);
+        if (entry.isIntersecting) start(); else stop();
+      }).observe(hero);
+    }
   }
 }
