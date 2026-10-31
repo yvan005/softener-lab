@@ -805,15 +805,23 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
   .admin-search{flex-direction:column;}
 }
 
-/* BANNIÈRE « SCÈNE » (pages Développement) : image sans texte en fond, texte HTML par-dessus */
-.page-header.has-banner.banner-tall{
+/* HAUTEUR UNIFIÉE DES BANNIÈRES — référence : « Design graphique »
+   ≥ 768 px : de 380 px (tablette) à 401 px (ordinateur), identique sur toutes les pages.
+   Le bloc de texte est centré verticalement ; les marges internes sont réduites pour que
+   les textes plus longs (titre sur 2-3 lignes, paragraphe long) tiennent dans la même hauteur. */
+.page-header.has-banner{
   display:flex; align-items:center;
-  min-height:clamp(320px, 34vw, 560px);
+  padding:12px 0;
+  min-height:clamp(380px, calc(332px + 5.4vw), 401px);
   background-position:center;
 }
-.page-header.has-banner.banner-tall .wrap{width:100%;}
+.page-header.has-banner > .wrap{width:100%;}
 @media (max-width:767px){
-  .page-header.has-banner.banner-tall{min-height:300px; background-position:72% center;}
+  .page-header.has-banner.banner-tall{background-position:72% center;}
+}
+@media (max-width:511px){
+  .page-header.has-banner{min-height:440px;}
+  .page-header.has-banner .banner-text{padding:20px 22px;}
 }
 
 
