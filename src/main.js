@@ -2,6 +2,7 @@ import './style.css';
 import { renderHeader } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { mountHeroBackground } from './components/hero-bg.js';
+import { SERVICE_PRICING } from './data/pricing.js';
 import { mountBackToTop } from './components/back-to-top.js';
 import { initI18n, refreshTranslations, getCurrentLang } from './i18n/i18n.js';
 import { translations } from './i18n/translations.js';
@@ -145,14 +146,49 @@ function prefillContactService() {
   const matches = Array.from(select.options).some((o) => o.value === wanted);
   if (matches) select.value = wanted;
 
-  // Prestation précise + prix indicatif (ex. depuis les cartes de design-graphique.html)
-  const clean = (v) => (v || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 80);
-  const offre = clean(params.get('offre'));
-  const prix = clean(params.get('prix'));
-  const message = document.getElementById('message');
-  if (offre && message && !message.value) {
-    message.value = `Je souhaite un devis pour : ${offre}${prix ? ` (${prix})` : ''}.\n\n`;
-  }
+}
+
+// Prestations chiffrées d'un service (src/data/pricing.js) : le select « Prestation » et la ligne
+// « Tarif indicatif » apparaissent dans le formulaire dès qu'un service concerné est choisi.
+function initServiceOffers() {
+  const service = document.getElementById('service');
+  const row = document.getElementById('offer-row');
+  const offerSelect = document.getElementById('offre');
+  const priceLine = document.getElementById('offer-price');
+  const tarif = document.getElementById('tarif');
+  if (!service || !row || !offerSelect || !priceLine || !tarif) return;
+
+  let wanted = new URLSearchParams(window.location.search).get('offre');
+
+  const showPrice = () => {
+    const offers = SERVICE_PRICING[service.value] || [];
+    const offer = offers.find((o) => o.label === offerSelect.value);
+    tarif.value = offer ? offer.price : '';
+    priceLine.textContent = offer
+      ? `Tarif indicatif : ${offer.price}`
+      : 'Choisissez une prestation pour voir son tarif indicatif.';
+    priceLine.classList.toggle('is-set', Boolean(offer));
+  };
+
+  const render = () => {
+    const offers = SERVICE_PRICING[service.value];
+    offerSelect.innerHTML = '';
+    if (!offers) {
+      row.hidden = true;
+      tarif.value = '';
+      return;
+    }
+    row.hidden = false;
+    offerSelect.add(new Option('— Choisir une prestation —', ''));
+    offers.forEach((o) => offerSelect.add(new Option(o.label, o.label)));
+    if (wanted && offers.some((o) => o.label === wanted)) offerSelect.value = wanted;
+    wanted = null; // le paramètre d'URL ne sert qu'au premier affichage
+    showPrice();
+  };
+
+  service.addEventListener('change', render);
+  offerSelect.addEventListener('change', showPrice);
+  render();
 }
 
 function mountContactForm() {
@@ -347,6 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
   syncAccountMenu();
   mountBackToTop();
   prefillContactService();
+  initServiceOffers();
   mountContactForm();
   initPasswordToggles();
   initNotifications();

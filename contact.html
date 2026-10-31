@@ -87,6 +87,13 @@
           <option>Autre / plusieurs services</option>
         </select>
       </div>
+      <div class="form-row" id="offer-row" hidden>
+        <label for="offre">Prestation</label>
+        <select id="offre" name="offre"></select>
+        <p class="offer-price" id="offer-price" aria-live="polite"></p>
+        <p class="form-hint">Prix en euros HT, hors frais d'impression. Un devis précis est établi selon votre projet.</p>
+        <input type="hidden" id="tarif" name="tarif">
+      </div>
       <div class="form-row">
         <label for="message">Décrivez votre besoin</label>
         <textarea id="message" name="message" required></textarea>
