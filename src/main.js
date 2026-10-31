@@ -144,6 +144,15 @@ function prefillContactService() {
 
   const matches = Array.from(select.options).some((o) => o.value === wanted);
   if (matches) select.value = wanted;
+
+  // Prestation précise + prix indicatif (ex. depuis les cartes de design-graphique.html)
+  const clean = (v) => (v || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 80);
+  const offre = clean(params.get('offre'));
+  const prix = clean(params.get('prix'));
+  const message = document.getElementById('message');
+  if (offre && message && !message.value) {
+    message.value = `Je souhaite un devis pour : ${offre}${prix ? ` (${prix})` : ''}.\n\n`;
+  }
 }
 
 function mountContactForm() {

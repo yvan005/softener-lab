@@ -388,6 +388,26 @@ nav{
 }
 .design-item h3{font-family:var(--display); font-weight:600; font-size:1.05rem; margin-bottom:8px;}
 .design-item p{color:var(--muted-on-paper); font-size:0.92rem;}
+.design-item.has-price{display:flex; flex-direction:column;}
+.design-foot{
+  margin-top:auto; padding-top:18px;
+  display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px 16px;
+}
+.design-price{
+  display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 8px;
+  font-family:var(--mono); font-size:0.72rem; color:var(--muted-on-paper);
+}
+.design-quote{
+  font-family:var(--mono); font-size:0.75rem; font-weight:500;
+  color:var(--green-on-paper); white-space:nowrap;
+  border-bottom:1px solid transparent; transition:border-color .15s ease;
+}
+.design-quote:hover, .design-quote:focus-visible{border-bottom-color:currentColor;}
+.design-price strong{
+  font-family:var(--display); font-weight:600; font-size:1.35rem; letter-spacing:-0.01em;
+  color:var(--ink-on-paper);
+}
+.design-price__unit{color:var(--green-on-paper);}
 /* --- Portfolio "showcase" : mise en avant en bento, section dédiée en pleine largeur --- */
 .portfolio-showcase{padding:90px 0 100px; border-bottom:1px solid var(--paper-line); background:var(--paper-2);}
 .portfolio-bento{
@@ -428,7 +448,8 @@ nav{
   .portfolio-bento{grid-template-columns:repeat(2, 1fr);}
 }
 @media (max-width:640px){
-  .portfolio-bento{grid-template-columns:1fr;}
+  .portfolio-bento{grid-template-columns:repeat(2, 1fr); gap:10px; margin-top:32px;}
+  .portfolio-bento .p-tile.has-img span{margin:8px; font-size:0.62rem; padding:3px 8px;}
   .portfolio-strip{grid-template-columns:1fr;}
   .design-grid{grid-template-columns:1fr;}
 }
@@ -821,7 +842,11 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
 }
 @media (max-width:511px){
   .page-header.has-banner{min-height:440px;}
-  .page-header.has-banner .banner-text{padding:20px 22px;}
+  .page-header.has-banner .banner-text{
+    padding:20px 22px; background:rgba(8,9,11,0.5);
+    backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  }
+  .page-header.has-banner p{font-size:0.95rem;}
 }
 
 
