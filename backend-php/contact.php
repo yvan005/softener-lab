@@ -104,7 +104,7 @@ if ($uid !== null && orders_ready($pdo)) {
 
     if (!$user) {
         http_response_code(401);
-        echo json_encode(['success' => false, 'errors' => ["Ta session a expiré. Recharge la page et réessaie."]]);
+        echo json_encode(['success' => false, 'errors' => ["Votre session a expiré. Rechargez la page et réessayez."]]);
         exit;
     }
 
@@ -138,11 +138,11 @@ if ($uid !== null && orders_ready($pdo)) {
     // Accusé de réception au membre : email + notification interne (sa propre cloche).
     send_order_received_email($user['email'], $user['full_name'], $id, $ref, $title, $orderService);
     notify_user($pdo, $uid, 'order_status', 'Commande ' . $ref . ' reçue',
-        'Ta demande « ' . $title . ' » est enregistrée, en attente de prise en charge.', '/order.php?id=' . $id);
+        'Votre demande « ' . $title . ' » est enregistrée, en attente de prise en charge.', '/order.php?id=' . $id);
 
     echo json_encode([
         'success' => true,
-        'message' => "Merci ! Ta demande a été enregistrée comme commande {$ref}. Tu peux suivre son avancement depuis « Mes commandes ».",
+        'message' => "Merci ! Votre demande a été enregistrée comme commande {$ref}. Vous pouvez suivre son avancement depuis « Mes commandes ».",
     ]);
     exit;
 }
@@ -164,7 +164,7 @@ $sent = send_contact_email($name, $email, $company, $service, $message);
 
 if (!$sent) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'errors' => ["L'envoi a échoué. Réessaie dans un instant ou écris-nous directement par email."]]);
+    echo json_encode(['success' => false, 'errors' => ["L'envoi a échoué. Réessayez dans un instant ou écrivez-nous directement par email."]]);
     exit;
 }
 

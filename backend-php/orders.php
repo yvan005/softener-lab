@@ -24,7 +24,7 @@ if ($ready && $_SERVER['REQUEST_METHOD'] !== 'POST' && !empty($_GET['reorder']))
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/orders.php');
     }
     if (!$ready) {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     $found = order_find_service($form['service']);
-    if (!$found) $errors[] = 'Choisis un service dans la liste.';
+    if (!$found) $errors[] = 'Choisissez un service dans la liste.';
 
     $tl = mb_strlen($form['title']);
     if ($tl < 3 || $tl > 150) $errors[] = 'Le titre doit contenir entre 3 et 150 caractères.';
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE user_id = ? AND status IN ('pending','in_progress')");
         $stmt->execute([$uid]);
         if ((int) $stmt->fetchColumn() >= OPEN_ORDER_LIMIT) {
-            $errors[] = 'Tu as déjà ' . OPEN_ORDER_LIMIT . ' commandes ouvertes. Attends leur avancement avant d\'en créer une nouvelle, ou contacte-nous.';
+            $errors[] = 'Vous avez déjà ' . OPEN_ORDER_LIMIT . ' commandes ouvertes. Attendez leur avancement avant d\'en créer une nouvelle, ou contactez-nous.';
         }
     }
 
@@ -79,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Accusé de réception au membre : email + notification interne (sa propre cloche).
         send_order_received_email($user['email'], $user['full_name'], $id, $ref, $form['title'], $service);
         notify_user($pdo, $uid, 'order_status', 'Commande ' . $ref . ' reçue',
-            'Ta commande « ' . $form['title'] . ' » est enregistrée, en attente de prise en charge.', '/order.php?id=' . $id);
-        flash_set('success', 'Commande ' . $ref . ' enregistrée. Nous revenons vers toi rapidement.');
+            'Votre commande « ' . $form['title'] . ' » est enregistrée, en attente de prise en charge.', '/order.php?id=' . $id);
+        flash_set('success', 'Commande ' . $ref . ' enregistrée. Nous revenons vers vous rapidement.');
         redirect('/order.php?id=' . $id);
     }
 }
@@ -120,7 +120,7 @@ $orders = array_values(array_filter($allOrders, function ($o) use ($filter, $q) 
     return true;
 }));
 
-member_page_start('Mes commandes', 'Mes commandes', 'Passe une commande de service et suis son avancement.', 'orders');
+member_page_start('Mes commandes', 'Mes commandes', 'Passez une commande de service et suivez son avancement.', 'orders');
 
 if (!$ready) {
     echo orders_unavailable_notice();
@@ -156,7 +156,7 @@ if (!$ready) {
           <input type="text" id="title" name="title" required minlength="3" maxlength="150" placeholder="Ex : Logo et charte graphique pour mon restaurant" value="<?= e($form['title']) ?>">
         </div>
         <div class="form-row">
-          <label for="brief">Décris ton besoin</label>
+          <label for="brief">Décrivez votre besoin</label>
           <textarea id="brief" name="brief" required minlength="10" maxlength="3000" placeholder="Contexte, objectifs, public visé, références, formats souhaités…"><?= e($form['brief']) ?></textarea>
         </div>
         <div class="form-row">

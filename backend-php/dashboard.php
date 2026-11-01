@@ -10,7 +10,7 @@ $uid  = (int) $user['id'];
 /* --- Actions (POST + jeton CSRF), puis redirection pour éviter le double envoi --- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/dashboard.php');
     }
 
@@ -28,15 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare('SELECT id FROM purchases WHERE user_id = ? AND training_id = ?');
             $stmt->execute([$uid, $tid]);
             if ($stmt->fetch()) {
-                flash_set('info', 'Cette formation est déjà associée à ton compte.');
+                flash_set('info', 'Cette formation est déjà associée à votre compte.');
             } else {
                 $pdo->prepare('INSERT INTO purchases (user_id, training_id, status) VALUES (?, ?, \'pending\')')
                     ->execute([$uid, $tid]);
                 notify_admin_training_request($user['full_name'], $user['email'], $training['name']);
                 notify_user($pdo, $uid, 'training_status', 'Demande envoyée',
-                    'Ta demande pour « ' . $training['name'] . ' » est enregistrée, en attente de validation.', '/dashboard.php');
+                    'Votre demande pour « ' . $training['name'] . ' » est enregistrée, en attente de validation.', '/dashboard.php');
                 send_training_requested_email($user['email'], $user['full_name'], $training['name']);
-                flash_set('success', 'Demande envoyée pour « ' . $training['name'] . ' ». Nous revenons vers toi rapidement.');
+                flash_set('success', 'Demande envoyée pour « ' . $training['name'] . ' ». Nous revenons vers vous rapidement.');
             }
         }
     } elseif ($action === 'cancel') {
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $del = $pdo->prepare('DELETE FROM purchases WHERE id = ? AND user_id = ? AND status = \'pending\'');
         $del->execute([$pid, $uid]);
         if ($del->rowCount() > 0) {
-            flash_set('success', 'Ta demande a été annulée.');
+            flash_set('success', 'Votre demande a été annulée.');
         } else {
             flash_set('error', "Impossible d'annuler cette demande.");
         }
@@ -94,7 +94,7 @@ $active  = count(array_filter($purchases, fn($p) => $p['status'] === 'paid'));
 $pending = count($purchases) - $active;
 $first   = explode(' ', trim($user['full_name']))[0];
 
-member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes commandes, tes formations et le catalogue.', 'dashboard');
+member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouvez vos commandes, vos formations et le catalogue.', 'dashboard');
 ?>
 
     <div class="member-stats">
@@ -125,7 +125,7 @@ member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes commandes, te
       </div>
       <?php if (empty($recentOrders)): ?>
         <div class="empty-state">
-          <p>Tu n'as pas encore passé de commande de service (design, développement, cybersécurité, flyers…).</p>
+          <p>Vous n'avez pas encore passé de commande de service (design, développement, cybersécurité, flyers…).</p>
           <p><a href="/orders.php?new=1">Passer une commande</a></p>
         </div>
       <?php else: ?>
@@ -148,11 +148,11 @@ member_page_start('Mon espace', 'Bonjour ' . $first, 'Retrouve tes commandes, te
     <h2 class="member-h2">Mes formations</h2>
     <?php if (empty($purchases)): ?>
       <div class="empty-state">
-        <p>Tu n'as pas encore de formation associée à ton compte.</p>
+        <p>Vous n'avez pas encore de formation associée à votre compte.</p>
         <?php if (!empty($catalog)): ?>
-          <p>Choisis-en une dans le catalogue ci-dessous, ou <a href="/formations.html">découvre nos parcours</a>.</p>
+          <p>Choisissez-en une dans le catalogue ci-dessous, ou <a href="/formations.html">découvrez nos parcours</a>.</p>
         <?php else: ?>
-          <p><a href="/formations.html">Découvre nos parcours</a>.</p>
+          <p><a href="/formations.html">Découvrez nos parcours</a>.</p>
         <?php endif; ?>
       </div>
     <?php else: ?>

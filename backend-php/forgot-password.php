@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="wrap">
     <div class="eyebrow-line"><span class="dot"></span> ESPACE MEMBRE</div>
     <h1>Mot de passe oublié</h1>
-    <p>Indique ton adresse email, on t'envoie un lien pour en choisir un nouveau.</p>
+    <p>Indiquez votre adresse email, nous vous envoyons un lien pour en choisir un nouveau.</p>
   </div>
 </section>
 

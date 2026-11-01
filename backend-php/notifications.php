@@ -8,7 +8,7 @@ $ready = notifications_ready($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/notifications.php');
     }
     if ($ready) {
@@ -34,7 +34,7 @@ $unread = $ready ? unread_notifications_count($pdo, $uid) : 0;
 member_page_start('Notifications', 'Notifications', 'Commandes, formations et annonces de Softener Lab.', 'notifications');
 
 if (!$ready) {
-    echo '<div class="alert alert--info" role="status">Les notifications sont momentanément indisponibles. Réessaie un peu plus tard.</div>';
+    echo '<div class="alert alert--info" role="status">Les notifications sont momentanément indisponibles. Réessayez un peu plus tard.</div>';
     member_page_end();
     exit;
 }

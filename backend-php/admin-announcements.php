@@ -7,15 +7,15 @@ $admin = require_admin($pdo);
 $errors = [];
 
 if (!notifications_ready($pdo)) {
-    admin_page_start('Annonces', 'Annonces', 'Diffuse un message à tous les membres.', 'announcements');
-    echo '<div class="alert alert--info" role="status">Les notifications sont momentanément indisponibles. Réessaie un peu plus tard.</div>';
+    admin_page_start('Annonces', 'Annonces', 'Diffusez un message à tous les membres.', 'announcements');
+    echo '<div class="alert alert--info" role="status">Les notifications sont momentanément indisponibles. Réessayez un peu plus tard.</div>';
     member_page_end();
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/admin-announcements.php');
     }
 
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $history = $pdo->query('SELECT id, title, message, created_at FROM announcements ORDER BY created_at DESC LIMIT 30')->fetchAll();
 
-admin_page_start('Annonces', 'Annonces', 'Diffuse un message à tous les membres — il apparaîtra dans leur cloche de notifications.', 'announcements');
+admin_page_start('Annonces', 'Annonces', 'Diffusez un message à tous les membres — il apparaîtra dans leur cloche de notifications.', 'announcements');
 ?>
 
     <?php foreach ($errors as $err): ?>

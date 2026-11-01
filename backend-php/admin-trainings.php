@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $back = '/admin-trainings.php' . (isset($_GET['status']) ? '?status=' . urlencode((string) $_GET['status']) : '');
 
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect($back);
     }
 
@@ -33,19 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'activate' && $p['status'] === 'pending') {
         $pdo->prepare("UPDATE purchases SET status = 'paid' WHERE id = ?")->execute([$pid]);
         notify_user($pdo, (int) $p['user_id'], 'training_status', 'Formation activée',
-            'Ton accès à « ' . $p['training'] . ' » est actif.', '/dashboard.php');
+            'Votre accès à « ' . $p['training'] . ' » est actif.', '/dashboard.php');
         $sent = send_training_status_email($p['email'], $p['full_name'], $p['training'], 'paid');
         flash_set($sent ? 'success' : 'error',
             'Accès activé pour ' . $p['full_name'] . ' (« ' . $p['training'] . ' »).'
-            . ($sent ? ' Email envoyé.' : " Mais l'email n'a pas pu être envoyé (vérifie la configuration SMTP)."));
+            . ($sent ? ' Email envoyé.' : " Mais l'email n'a pas pu être envoyé (vérifiez la configuration SMTP)."));
     } elseif ($action === 'reject' && $p['status'] === 'pending') {
         $pdo->prepare("DELETE FROM purchases WHERE id = ? AND status = 'pending'")->execute([$pid]);
         notify_user($pdo, (int) $p['user_id'], 'training_status', 'Demande refusée',
-            'Ta demande pour « ' . $p['training'] . ' » a été refusée.', '/formations.html');
+            'Votre demande pour « ' . $p['training'] . ' » a été refusée.', '/formations.html');
         $sent = send_training_status_email($p['email'], $p['full_name'], $p['training'], 'rejected');
         flash_set($sent ? 'success' : 'error',
             'Demande refusée pour ' . $p['full_name'] . ' (« ' . $p['training'] . ' »).'
-            . ($sent ? ' Email envoyé.' : " Mais l'email n'a pas pu être envoyé (vérifie la configuration SMTP)."));
+            . ($sent ? ' Email envoyé.' : " Mais l'email n'a pas pu être envoyé (vérifiez la configuration SMTP)."));
     } elseif ($action === 'revert' && $p['status'] === 'paid') {
         $pdo->prepare("UPDATE purchases SET status = 'pending' WHERE id = ?")->execute([$pid]);
         flash_set('success', 'Accès remis en attente pour ' . $p['full_name'] . '. Aucun email envoyé.');
@@ -72,7 +72,7 @@ $rows = $stmt->fetchAll();
 
 $pendingCount = (int) $pdo->query("SELECT COUNT(*) FROM purchases WHERE status = 'pending'")->fetchColumn();
 
-admin_page_start('Demandes de formation', 'Demandes de formation', 'Active ou refuse les demandes d\'accès des membres.', 'trainings');
+admin_page_start('Demandes de formation', 'Demandes de formation', 'Activez ou refusez les demandes d\'accès des membres.', 'trainings');
 ?>
 
     <div class="filter-chips" role="navigation" aria-label="Filtrer les demandes">

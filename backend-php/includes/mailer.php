@@ -27,12 +27,12 @@ function send_verification_email(string $toEmail, string $toName, string $token)
         $verifyLink = SITE_URL . '/verify.php?token=' . urlencode($token);
 
         $mail->isHTML(true);
-        $mail->Subject = 'Confirme ton compte Softener Lab';
+        $mail->Subject = 'Confirmez votre compte Softener Lab';
         $mail->Body    = "Bonjour {$toName},<br><br>
-            Merci de ton inscription. Confirme ton adresse email en cliquant sur ce lien :<br>
+            Merci de votre inscription. Confirmez votre adresse email en cliquant sur ce lien :<br>
             <a href=\"{$verifyLink}\">{$verifyLink}</a><br><br>
-            Si tu n'es pas à l'origine de cette inscription, ignore ce message.";
-        $mail->AltBody = "Confirme ton compte en ouvrant ce lien : {$verifyLink}";
+            Si vous n'êtes pas à l'origine de cette inscription, ignorez ce message.";
+        $mail->AltBody = "Confirmez votre compte en ouvrant ce lien : {$verifyLink}";
 
         $mail->send();
         return true;
@@ -61,12 +61,12 @@ function send_password_reset_email(string $toEmail, string $toName, string $toke
         $resetLink = SITE_URL . '/reset-password.php?token=' . urlencode($token);
 
         $mail->isHTML(true);
-        $mail->Subject = 'Réinitialise ton mot de passe Softener Lab';
+        $mail->Subject = 'Réinitialisez votre mot de passe Softener Lab';
         $mail->Body    = "Bonjour {$toName},<br><br>
-            Tu as demandé à réinitialiser ton mot de passe. Clique sur ce lien pour en choisir un nouveau (valable 1 heure) :<br>
+            Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur ce lien pour en choisir un nouveau (valable 1 heure) :<br>
             <a href=\"{$resetLink}\">{$resetLink}</a><br><br>
-            Si tu n'es pas à l'origine de cette demande, ignore ce message : ton mot de passe actuel reste inchangé.";
-        $mail->AltBody = "Réinitialise ton mot de passe en ouvrant ce lien (valable 1 heure) : {$resetLink}";
+            Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : votre mot de passe actuel reste inchangé.";
+        $mail->AltBody = "Réinitialisez votre mot de passe en ouvrant ce lien (valable 1 heure) : {$resetLink}";
 
         $mail->send();
         return true;
@@ -191,12 +191,12 @@ function email_quote(string $note): string
 function send_order_status_email(string $toEmail, string $toName, int $orderId, string $ref, string $title, string $service, string $status, string $note = ''): bool
 {
     $texts = [
-        'pending'     => ['Ta commande est de nouveau en attente', "Ta commande est repassée à l'état « Reçue »."],
-        'in_progress' => ['Ta commande est en cours',              'Bonne nouvelle : nous avons commencé à travailler sur ta commande.'],
-        'delivered'   => ['Ta commande est livrée',                'Ta commande est terminée et livrée. Merci pour ta confiance !'],
-        'cancelled'   => ['Ta commande a été annulée',             'Ta commande a été annulée.'],
+        'pending'     => ['Votre commande est de nouveau en attente', "Votre commande est repassée à l'état « Reçue »."],
+        'in_progress' => ['Votre commande est en cours',              'Bonne nouvelle : nous avons commencé à travailler sur votre commande.'],
+        'delivered'   => ['Votre commande est livrée',                'Votre commande est terminée et livrée. Merci pour votre confiance !'],
+        'cancelled'   => ['Votre commande a été annulée',             'Votre commande a été annulée.'],
     ];
-    [$heading, $sentence] = $texts[$status] ?? ['Mise à jour de ta commande', 'Ta commande a été mise à jour.'];
+    [$heading, $sentence] = $texts[$status] ?? ['Mise à jour de votre commande', 'Votre commande a été mise à jour.'];
 
     $body = '<p>Bonjour ' . mail_h($toName) . ',</p><p>' . mail_h($sentence) . '</p>'
           . '<p style="margin:16px 0;"><strong>' . mail_h($ref) . '</strong> — ' . mail_h($title)
@@ -220,13 +220,13 @@ function send_order_status_email(string $toEmail, string $toName, int $orderId, 
 function send_training_status_email(string $toEmail, string $toName, string $trainingName, string $status): bool
 {
     if ($status === 'paid') {
-        $heading  = 'Ton accès est activé';
-        $sentence = "Ta demande a été acceptée : tu as maintenant accès à la formation « {$trainingName} ».";
+        $heading  = 'Votre accès est activé';
+        $sentence = "Votre demande a été acceptée : vous avez maintenant accès à la formation « {$trainingName} ».";
         $button   = ['Ouvrir mon espace', SITE_URL . '/dashboard.php'];
     } else {
-        $heading  = "Ta demande n'a pas pu être acceptée";
-        $sentence = "Nous n'avons pas pu donner suite à ta demande pour la formation « {$trainingName} » pour le moment. "
-                  . "N'hésite pas à nous écrire pour en discuter.";
+        $heading  = "Votre demande n'a pas pu être acceptée";
+        $sentence = "Nous n'avons pas pu donner suite à votre demande pour la formation « {$trainingName} » pour le moment. "
+                  . "N'hésitez pas à nous écrire pour en discuter.";
         $button   = ['Nous contacter', SITE_URL . '/contact.html'];
     }
     $body = '<p>Bonjour ' . mail_h($toName) . ',</p><p>' . mail_h($sentence) . '</p>';
@@ -243,8 +243,8 @@ function send_training_status_email(string $toEmail, string $toName, string $tra
 /** Email au membre juste après le dépôt d'une commande (accusé de réception). */
 function send_order_received_email(string $toEmail, string $toName, int $orderId, string $ref, string $title, string $service): bool
 {
-    $heading = 'Ta commande est bien enregistrée';
-    $sentence = 'Merci ! Nous avons bien reçu ta commande et revenons vers toi rapidement.';
+    $heading = 'Votre commande est bien enregistrée';
+    $sentence = 'Merci ! Nous avons bien reçu votre commande et revenons vers vous rapidement.';
     $body = '<p>Bonjour ' . mail_h($toName) . ',</p><p>' . mail_h($sentence) . '</p>'
           . '<p style="margin:16px 0;"><strong>' . mail_h($ref) . '</strong> — ' . mail_h($title)
           . '<br><span style="color:#5B655E;">' . mail_h($service) . '</span></p>';
@@ -263,8 +263,8 @@ function send_order_received_email(string $toEmail, string $toName, int $orderId
 /** Email au membre juste après une demande d'accès à une formation (accusé de réception). */
 function send_training_requested_email(string $toEmail, string $toName, string $trainingName): bool
 {
-    $heading = 'Ta demande est bien enregistrée';
-    $sentence = "Merci ! Nous avons bien reçu ta demande d'accès à la formation « {$trainingName} » et revenons vers toi rapidement.";
+    $heading = 'Votre demande est bien enregistrée';
+    $sentence = "Merci ! Nous avons bien reçu votre demande d'accès à la formation « {$trainingName} » et revenons vers vous rapidement.";
     $body = '<p>Bonjour ' . mail_h($toName) . ',</p><p>' . mail_h($sentence) . '</p>';
     $link = SITE_URL . '/dashboard.php';
     $alt  = "Bonjour {$toName},\n\n{$sentence}\n\nMon espace : {$link}";

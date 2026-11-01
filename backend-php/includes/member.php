@@ -47,7 +47,7 @@ function require_member(PDO $pdo): array {
 function verify_current_password(PDO $pdo, array $user, string $password): ?string {
     if ($user['locked_until'] !== null && strtotime($user['locked_until']) > time()) {
         $min = (int) ceil((strtotime($user['locked_until']) - time()) / 60);
-        return "Trop de tentatives échouées. Réessaie dans {$min} minute" . ($min > 1 ? 's' : '') . '.';
+        return "Trop de tentatives échouées. Réessayez dans {$min} minute" . ($min > 1 ? 's' : '') . '.';
     }
 
     if (!password_verify($password, $user['password_hash'])) {
@@ -56,7 +56,7 @@ function verify_current_password(PDO $pdo, array $user, string $password): ?stri
             $lockUntil = date('Y-m-d H:i:s', time() + MEMBER_LOCK_MINUTES * 60);
             $pdo->prepare('UPDATE users SET failed_attempts = 0, locked_until = ? WHERE id = ?')
                 ->execute([$lockUntil, $user['id']]);
-            return 'Trop de tentatives échouées. Réessaie dans ' . MEMBER_LOCK_MINUTES . ' minutes.';
+            return 'Trop de tentatives échouées. Réessayez dans ' . MEMBER_LOCK_MINUTES . ' minutes.';
         }
         $pdo->prepare('UPDATE users SET failed_attempts = ? WHERE id = ?')
             ->execute([$attempts, $user['id']]);

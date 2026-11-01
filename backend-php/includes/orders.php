@@ -145,7 +145,7 @@ function orders_ready(PDO $pdo): bool {
 }
 
 function orders_unavailable_notice(): string {
-    return '<div class="alert alert--info" role="status">Le suivi des commandes est momentanément indisponible. Réessaie un peu plus tard ou <a href="/contact.html" style="text-decoration:underline;">contacte-nous</a>.</div>';
+    return '<div class="alert alert--info" role="status">Le suivi des commandes est momentanément indisponible. Réessayez un peu plus tard ou <a href="/contact.html" style="text-decoration:underline;">contactez-nous</a>.</div>';
 }
 
 /** Vrai si la table `order_events` (journal d'historique) est utilisable. */

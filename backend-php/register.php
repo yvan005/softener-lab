@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $sent = send_verification_email($email, $fullName, $token);
         if (!$sent) {
-            $errors[] = "Ton compte a été créé, mais l'email de confirmation n'a pas pu être envoyé. Vérifie la configuration SMTP dans includes/config.php.";
+            $errors[] = "Votre compte a été créé, mais l'email de confirmation n'a pas pu être envoyé. Vérifiez la configuration SMTP dans includes/config.php.";
         } else {
             $success = true;
         }
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="wrap">
     <div class="eyebrow-line"><span class="dot"></span> ESPACE MEMBRE</div>
     <h1>Créer un compte</h1>
-    <p>Accède à tes formations une fois ton compte confirmé par email.</p>
+    <p>Accédez à vos formations une fois votre compte confirmé par email.</p>
   </div>
 </section>
 
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($success): ?>
       <div class="form-box">
         <h3>Compte créé !</h3>
-        <p>Un email de confirmation vient d'être envoyé à ton adresse. Clique sur le lien reçu pour activer ton compte.</p>
+        <p>Un email de confirmation vient d'être envoyé à votre adresse. Cliquez sur le lien reçu pour activer votre compte.</p>
       </div>
     <?php else: ?>
       <?php if (!empty($errors)): ?>

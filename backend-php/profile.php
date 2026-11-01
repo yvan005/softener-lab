@@ -10,7 +10,7 @@ $nameValue = $user['full_name'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/profile.php');
     }
 
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($errors['name'])) {
             $pdo->prepare('UPDATE users SET full_name = ? WHERE id = ?')->execute([$nameValue, $uid]);
             $_SESSION['user_name'] = $nameValue;
-            flash_set('success', 'Ton nom a été mis à jour.');
+            flash_set('success', 'Votre nom a été mis à jour.');
             redirect('/profile.php');
         }
     }
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?')
                     ->execute([password_hash($new, PASSWORD_DEFAULT), $uid]);
                 session_regenerate_id(true);
-                flash_set('success', 'Ton mot de passe a été modifié.');
+                flash_set('success', 'Votre mot de passe a été modifié.');
                 redirect('/profile.php');
             }
         }
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /* --- Supprimer le compte --- */
     elseif ($action === 'delete_account') {
         if (empty($_POST['confirm_delete'])) {
-            $errors['delete'][] = 'Coche la case pour confirmer la suppression.';
+            $errors['delete'][] = 'Cochez la case pour confirmer la suppression.';
         } else {
             $err = verify_current_password($pdo, $user, $_POST['password'] ?? '');
             if ($err !== null) {
@@ -85,7 +85,7 @@ function render_errors(array $list): void {
     }
 }
 
-member_page_start('Mon profil', 'Mon profil', 'Gère tes informations personnelles et la sécurité de ton compte.', 'profile');
+member_page_start('Mon profil', 'Mon profil', 'Gérez vos informations personnelles et la sécurité de votre compte.', 'profile');
 ?>
 
     <div class="profile-grid">
@@ -102,13 +102,13 @@ member_page_start('Mon profil', 'Mon profil', 'Gère tes informations personnell
         <div class="form-row">
           <label for="email">Adresse email</label>
           <input type="email" id="email" value="<?= e($user['email']) ?>" disabled>
-          <p class="form-hint">Pour changer d'adresse, <a href="/contact.html">contacte-nous</a>.</p>
+          <p class="form-hint">Pour changer d'adresse, <a href="/contact.html">contactez-nous</a>.</p>
         </div>
         <p class="form-hint form-hint--spaced">Membre depuis le <?= e(fr_date($user['created_at'])) ?>.</p>
         <?php if (!empty($_SESSION['prev_login_at'])): ?>
           <p class="form-hint">Connexion précédente : le <?= e(fr_date($_SESSION['prev_login_at'])) ?> à <?= e(date('H:i', strtotime($_SESSION['prev_login_at']))) ?>.</p>
         <?php else: ?>
-          <p class="form-hint">C'est ta première connexion enregistrée.</p>
+          <p class="form-hint">C'est votre première connexion enregistrée.</p>
         <?php endif; ?>
         <button type="submit" class="btn-primary">Enregistrer</button>
       </form>
@@ -138,7 +138,7 @@ member_page_start('Mon profil', 'Mon profil', 'Gère tes informations personnell
 
     <form class="form-box member-box danger-zone" method="post" action="/profile.php">
       <h2 class="member-h2 member-h2--box">Supprimer mon compte</h2>
-      <p class="form-hint form-hint--spaced">Cette action est définitive : ton compte, tes formations et tes commandes seront effacés. <a href="/export-data.php" style="text-decoration:underline;">Télécharge tes données</a> avant de continuer si tu veux en garder une trace.</p>
+      <p class="form-hint form-hint--spaced">Cette action est définitive : votre compte, vos formations et vos commandes seront effacés. <a href="/export-data.php" style="text-decoration:underline;">Téléchargez vos données</a> avant de continuer si vous voulez en garder une trace.</p>
       <?php render_errors($errors['delete']); ?>
       <?= csrf_field() ?>
       <input type="hidden" name="action" value="delete_account">

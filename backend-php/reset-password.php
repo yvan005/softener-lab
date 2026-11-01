@@ -55,7 +55,7 @@ if ($token === '' || !$user || $isExpired) {
   <div class="wrap">
     <div class="eyebrow-line"><span class="dot"></span> ESPACE MEMBRE</div>
     <h1>Nouveau mot de passe</h1>
-    <p>Choisis un mot de passe que tu n'utilises nulle part ailleurs.</p>
+    <p>Choisissez un mot de passe que vous n'utilisez nulle part ailleurs.</p>
   </div>
 </section>
 
@@ -70,7 +70,7 @@ if ($token === '' || !$user || $isExpired) {
     <?php elseif ($success): ?>
       <div class="form-box">
         <h3>Mot de passe mis à jour</h3>
-        <p>Tu peux maintenant te connecter avec ton nouveau mot de passe.</p>
+        <p>Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>
         <p style="margin-top:16px;"><a href="/login.php" class="btn-primary" style="display:inline-block;">Se connecter</a></p>
       </div>
     <?php else: ?>

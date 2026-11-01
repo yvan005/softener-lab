@@ -240,7 +240,7 @@ function mountContactForm() {
       if (feedback) {
         feedback.hidden = false;
         feedback.className = 'form-feedback is-error';
-        feedback.textContent = "Impossible d'envoyer le message pour le moment. Réessaie dans un instant.";
+        feedback.textContent = "Impossible d'envoyer le message pour le moment. Réessayez dans un instant.";
       }
     } finally {
       if (button) {

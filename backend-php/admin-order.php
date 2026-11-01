@@ -30,7 +30,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/admin-order.php?id=' . $id);
     }
 
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($sent) {
                 flash_set('success', $msg . ' Email envoyé à ' . $order['email'] . '.');
             } else {
-                flash_set('error', $msg . " Mais l'email n'a pas pu être envoyé (vérifie la configuration SMTP).");
+                flash_set('error', $msg . " Mais l'email n'a pas pu être envoyé (vérifiez la configuration SMTP).");
             }
         } else {
             flash_set('success', $msg . ' Aucun email envoyé.');
@@ -118,7 +118,7 @@ admin_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . $order['fu
           </div>
           <div class="form-row">
             <label for="note">Message au membre <span class="form-hint-inline">(facultatif — visible sur sa commande et joint à l'email)</span></label>
-            <textarea id="note" name="note" maxlength="2000" placeholder="Ex : Première maquette prête, on t'envoie les fichiers demain."></textarea>
+            <textarea id="note" name="note" maxlength="2000" placeholder="Ex : Première maquette prête, nous vous envoyons les fichiers demain."></textarea>
           </div>
           <label class="check-row check-row--ok">
             <input type="checkbox" name="notify" value="1" checked>

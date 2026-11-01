@@ -22,13 +22,13 @@ if (!$order) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
     } elseif (($_POST['action'] ?? '') === 'cancel') {
         $upd = $pdo->prepare("UPDATE orders SET status = 'cancelled' WHERE id = ? AND user_id = ? AND status = 'pending'");
         $upd->execute([$id, $uid]);
         if ($upd->rowCount() > 0) {
             log_order_event($pdo, $id, 'cancelled', 'Annulée par le membre.');
-            flash_set('success', 'Ta commande a été annulée.');
+            flash_set('success', 'Votre commande a été annulée.');
         } else {
             flash_set('error', "Cette commande ne peut plus être annulée : elle est déjà prise en charge.");
         }
@@ -67,7 +67,7 @@ member_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . order_cat
 
     <div class="order-detail">
       <div class="content-card">
-        <h3>Ton besoin</h3>
+        <h3>Votre besoin</h3>
         <p class="order-brief"><?= nl2br(e($order['brief'])) ?></p>
       </div>
 
@@ -92,7 +92,7 @@ member_page_start($ref, $order['title'], 'Commande ' . $ref . ' · ' . order_cat
             <button type="submit" class="btn-outline btn-small">Annuler la commande</button>
           </form>
         <?php elseif ($status === 'in_progress'): ?>
-          <p class="form-hint">Nous travaillons sur ta commande. Une précision à ajouter ? <a href="/contact.html">Écris-nous</a>.</p>
+          <p class="form-hint">Nous travaillons sur votre commande. Une précision à ajouter ? <a href="/contact.html">Écrivez-nous</a>.</p>
         <?php elseif (in_array($status, ['delivered', 'cancelled'], true)): ?>
           <div class="order-actions">
             <a class="btn-outline btn-small" href="/orders.php?new=1&amp;reorder=<?= (int) $order['id'] ?>">Recommander ce service</a>

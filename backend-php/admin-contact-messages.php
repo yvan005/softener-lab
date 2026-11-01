@@ -11,7 +11,7 @@ $ready = contact_messages_ready($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_valid()) {
-        flash_set('error', 'Ta session a expiré. Réessaie.');
+        flash_set('error', 'Votre session a expiré. Réessayez.');
         redirect('/admin-contact-messages.php');
     }
     if ($ready) {
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 admin_page_start('Messages de contact', 'Messages de contact', 'Demandes envoyées par des visiteurs non connectés depuis le formulaire de contact.', 'contact');
 
 if (!$ready) {
-    echo '<div class="alert alert--info" role="status">Les messages de contact sont momentanément indisponibles. Réessaie un peu plus tard.</div>';
+    echo '<div class="alert alert--info" role="status">Les messages de contact sont momentanément indisponibles. Réessayez un peu plus tard.</div>';
     member_page_end();
     exit;
 }

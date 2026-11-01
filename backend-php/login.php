@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($isLocked) {
         $minutesLeft = (int) ceil((strtotime($user['locked_until']) - time()) / 60);
-        $errors[] = "Trop de tentatives échouées. Réessaie dans {$minutesLeft} minute" . ($minutesLeft > 1 ? 's' : '') . ".";
+        $errors[] = "Trop de tentatives échouées. Réessayez dans {$minutesLeft} minute" . ($minutesLeft > 1 ? 's' : '') . ".";
     } elseif (!$user || !password_verify($password, $user['password_hash'])) {
         if ($user) {
             $attempts = (int) $user['failed_attempts'] + 1;
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $lockUntil = date('Y-m-d H:i:s', time() + $LOCK_MINUTES * 60);
                 $upd = $pdo->prepare('UPDATE users SET failed_attempts = 0, locked_until = ? WHERE id = ?');
                 $upd->execute([$lockUntil, $user['id']]);
-                $errors[] = "Trop de tentatives échouées. Réessaie dans {$LOCK_MINUTES} minutes.";
+                $errors[] = "Trop de tentatives échouées. Réessayez dans {$LOCK_MINUTES} minutes.";
             } else {
                 $upd = $pdo->prepare('UPDATE users SET failed_attempts = ? WHERE id = ?');
                 $upd->execute([$attempts, $user['id']]);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "Email ou mot de passe incorrect.";
         }
     } elseif (!$user['is_verified']) {
-        $errors[] = "Confirme d'abord ton adresse email (vérifie ta boîte de réception).";
+        $errors[] = "Confirmez d'abord votre adresse email (vérifiez votre boîte de réception).";
     } else {
         $reset = $pdo->prepare('UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = ?');
         $reset->execute([$user['id']]);
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="wrap">
     <div class="eyebrow-line"><span class="dot"></span> ESPACE MEMBRE</div>
     <h1>Se connecter</h1>
-    <p>Accède à tes formations achetées.</p>
+    <p>Accédez à vos formations achetées.</p>
   </div>
 </section>
 

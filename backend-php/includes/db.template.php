@@ -21,5 +21,5 @@ try {
     );
 } catch (PDOException $e) {
     http_response_code(500);
-    die('Connexion à la base de données impossible. Vérifie includes/db.php.');
+    die('Connexion à la base de données impossible. Vérifiez includes/db.php.');
 }
