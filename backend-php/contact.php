@@ -81,18 +81,10 @@ if (!empty($errors)) {
     exit;
 }
 
-// Prestation choisie + tarif indicatif affiché au visiteur (champs du formulaire, pas du message).
-// Nettoyés puis ajoutés en tête du message : ils apparaissent ainsi dans l'email, dans
-// /admin-contact-messages.php et dans le brief de la commande, sans toucher à la base.
-$cleanField = static fn (string $v): string =>
-    mb_substr(trim(preg_replace('/[\x00-\x1F\x7F]+/u', ' ', strip_tags($v))), 0, 80);
-$offre = $cleanField((string) ($_POST['offre'] ?? ''));
-$tarif = $cleanField((string) ($_POST['tarif'] ?? ''));
-if ($offre !== '') {
-    $message = "Prestation : {$offre}"
-             . ($tarif !== '' ? "\nTarif indicatif affiché : {$tarif}" : '')
-             . "\n\n" . $message;
-}
+// Prestation choisie + tarif indicatif affiché au visiteur (champs du formulaire, pas du message) :
+// ajoutés en tête du message → visibles dans l'email, dans /admin-contact-messages.php et dans le brief
+// de la commande, sans toucher à la base ni au texte écrit par le client.
+$message = price_header((string) ($_POST['offre'] ?? ''), (string) ($_POST['tarif'] ?? '')) . $message;
 
 $uid = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
 

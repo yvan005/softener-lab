@@ -67,15 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         [$category, $service] = $found;
+        // Tarif indicatif affiché dans le formulaire : conservé en tête du brief (le texte saisi reste intact en cas d'erreur).
+        $briefStored = price_header((string) ($_POST['offre'] ?? ''), (string) ($_POST['tarif'] ?? '')) . $form['brief'];
         $pdo->prepare(
             "INSERT INTO orders (user_id, category, service, title, brief, deadline, status)
              VALUES (?, ?, ?, ?, ?, ?, 'pending')"
-        )->execute([$uid, $category, $service, $form['title'], $form['brief'], $deadline]);
+        )->execute([$uid, $category, $service, $form['title'], $briefStored, $deadline]);
         $id = (int) $pdo->lastInsertId();
         $ref = order_ref($id);
         log_order_event($pdo, $id, 'pending');
         // Prévient l'équipe ; un échec d'envoi ne doit jamais empêcher l'enregistrement de la commande.
-        notify_admin_new_order($user['full_name'], $user['email'], $id, $ref, $service, $form['title'], $form['brief'], $deadline);
+        notify_admin_new_order($user['full_name'], $user['email'], $id, $ref, $service, $form['title'], $briefStored, $deadline);
         // Accusé de réception au membre : email + notification interne (sa propre cloche).
         send_order_received_email($user['email'], $user['full_name'], $id, $ref, $form['title'], $service);
         notify_user($pdo, $uid, 'order_status', 'Commande ' . $ref . ' reçue',

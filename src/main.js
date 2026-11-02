@@ -2,7 +2,7 @@ import './style.css';
 import { renderHeader } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { mountHeroBackground } from './components/hero-bg.js';
-import { SERVICE_PRICING } from './data/pricing.js';
+import { SERVICE_PRICING, serviceName } from './data/pricing.js';
 import { mountBackToTop } from './components/back-to-top.js';
 import { initI18n, refreshTranslations, getCurrentLang } from './i18n/i18n.js';
 import { translations } from './i18n/translations.js';
@@ -148,46 +148,74 @@ function prefillContactService() {
 
 }
 
-// Prestations chiffrées d'un service (src/data/pricing.js) : le select « Prestation » et la ligne
-// « Tarif indicatif » apparaissent dans le formulaire dès qu'un service concerné est choisi.
+// Tarif indicatif d'un service (src/data/pricing.js), affiché dans le formulaire dès qu'un service est
+// choisi : formulaire de contact ET « Passer une commande » de l'espace membre (le bloc est créé ici,
+// sous le champ « service »). Si le service compte plusieurs prestations, un choix « Prestation » apparaît.
+// Les champs `offre` et `tarif` sont envoyés au serveur, qui les ajoute en tête du message (pas dans le texte du client).
 function initServiceOffers() {
   const service = document.getElementById('service');
-  const row = document.getElementById('offer-row');
-  const offerSelect = document.getElementById('offre');
-  const priceLine = document.getElementById('offer-price');
-  const tarif = document.getElementById('tarif');
-  if (!service || !row || !offerSelect || !priceLine || !tarif) return;
+  if (!service) return;
+  const anchor = service.closest('.form-row') || service.parentElement;
 
+  const row = document.createElement('div');
+  row.className = 'form-row';
+  row.id = 'offer-row';
+  row.hidden = true;
+  row.innerHTML = `
+    <div class="offer-pick" hidden>
+      <label for="offre">Prestation</label>
+      <select id="offre" name="offre"></select>
+    </div>
+    <p class="offer-price" id="offer-price" aria-live="polite"></p>
+    <p class="form-hint" id="offer-hint"></p>
+    <input type="hidden" id="tarif" name="tarif">`;
+  anchor.after(row);
+
+  const pick = row.querySelector('.offer-pick');
+  const offerSelect = row.querySelector('#offre');
+  const priceLine = row.querySelector('#offer-price');
+  const hint = row.querySelector('#offer-hint');
+  const tarif = row.querySelector('#tarif');
   let wanted = new URLSearchParams(window.location.search).get('offre');
 
-  const showPrice = () => {
-    const offers = SERVICE_PRICING[service.value] || [];
-    const offer = offers.find((o) => o.label === offerSelect.value);
-    tarif.value = offer ? offer.price : '';
-    priceLine.textContent = offer
-      ? `Tarif indicatif : ${offer.price}`
+  const showPrice = (text) => {
+    tarif.value = text || '';
+    priceLine.textContent = text
+      ? `Tarif indicatif : ${text}`
       : 'Choisissez une prestation pour voir son tarif indicatif.';
-    priceLine.classList.toggle('is-set', Boolean(offer));
+    priceLine.classList.toggle('is-set', Boolean(text));
   };
 
   const render = () => {
-    const offers = SERVICE_PRICING[service.value];
+    const entry = SERVICE_PRICING[serviceName(service.value)];
     offerSelect.innerHTML = '';
-    if (!offers) {
+    if (!entry) {
       row.hidden = true;
       tarif.value = '';
       return;
     }
     row.hidden = false;
-    offerSelect.add(new Option('— Choisir une prestation —', ''));
-    offers.forEach((o) => offerSelect.add(new Option(o.label, o.label)));
-    if (wanted && offers.some((o) => o.label === wanted)) offerSelect.value = wanted;
-    wanted = null; // le paramètre d'URL ne sert qu'au premier affichage
-    showPrice();
+    hint.textContent = `Prix en euros HT. ${entry.note ? `${entry.note} ` : ''}Un devis précis est établi selon votre projet.`;
+    if (entry.offers) {
+      pick.hidden = false;
+      offerSelect.add(new Option('— Choisir une prestation —', ''));
+      entry.offers.forEach((o) => offerSelect.add(new Option(o.label, o.label)));
+      if (wanted && entry.offers.some((o) => o.label === wanted)) offerSelect.value = wanted;
+      wanted = null; // le paramètre d'URL ne sert qu'au premier affichage
+      const chosen = entry.offers.find((o) => o.label === offerSelect.value);
+      showPrice(chosen ? chosen.price : '');
+    } else {
+      pick.hidden = true;
+      showPrice(entry.price);
+    }
   };
 
   service.addEventListener('change', render);
-  offerSelect.addEventListener('change', showPrice);
+  offerSelect.addEventListener('change', () => {
+    const entry = SERVICE_PRICING[serviceName(service.value)];
+    const chosen = entry && entry.offers ? entry.offers.find((o) => o.label === offerSelect.value) : null;
+    showPrice(chosen ? chosen.price : '');
+  });
   render();
 }
 

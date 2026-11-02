@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { portfolioGallery } from './vite-plugin-gallery.js';
 
 export default defineConfig({
+  plugins: [portfolioGallery()],
   build: {
     rollupOptions: {
       input: {

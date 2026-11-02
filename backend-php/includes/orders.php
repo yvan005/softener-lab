@@ -7,6 +7,23 @@ require_once __DIR__ . '/member.php';
 
 const OPEN_ORDER_LIMIT = 10; // commandes ouvertes (reçues + en cours) maximum par membre
 
+/**
+ * Prestation + tarif indicatif choisis dans le formulaire (champs `offre` et `tarif`, remplis par le JS
+ * depuis src/data/pricing.js). Retourne un bloc de texte à placer EN TÊTE du message / du brief, ou '' s'il n'y a rien.
+ * Les valeurs sont nettoyées (balises, caractères de contrôle, 80 caractères max) : elles reflètent ce qui
+ * était affiché au visiteur, à titre indicatif — le devis reste la référence.
+ */
+function price_header(string $offre, string $tarif): string {
+    $clean = static fn (string $v): string =>
+        mb_substr(trim(preg_replace('/[\x00-\x1F\x7F]+/u', ' ', strip_tags($v))), 0, 80);
+    $offre = $clean($offre);
+    $tarif = $clean($tarif);
+    $lines = [];
+    if ($offre !== '') { $lines[] = 'Prestation : ' . $offre; }
+    if ($tarif !== '') { $lines[] = 'Tarif indicatif affiché : ' . $tarif; }
+    return $lines ? implode("\n", $lines) . "\n\n" : '';
+}
+
 /** Catalogue proposé dans le formulaire — même liste que contact.html. */
 function order_catalog(): array {
     return [

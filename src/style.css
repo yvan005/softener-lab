@@ -249,7 +249,7 @@ nav{
 .hero-stat-label{font-size:0.82rem; color:var(--muted); margin-top:4px; line-height:1.4;}
 .btn-primary{
   background:var(--green); color:var(--ink); padding:14px 26px;
-  border-radius:3px; font-weight:600; font-size:0.95rem;
+  border-radius:3px; font-weight:600; font-size:1rem;
   transition:transform .15s ease, box-shadow .15s ease;
 }
 .btn-primary:hover{transform:translateY(-1px); box-shadow:0 6px 20px -6px rgba(61,220,132,0.5);}
@@ -324,9 +324,9 @@ nav{
   align-items:start;
 }
 .service-row:last-child{border-bottom:1px solid var(--paper-line);}
-.service-tag{font-family:var(--mono); font-size:0.78rem; color:var(--green-on-paper); padding-top:4px;}
+.service-tag{font-family:var(--mono); font-size:0.88rem; color:var(--green-on-paper); padding-top:4px;}
 .service-name{font-family:var(--display); font-weight:600; font-size:1.4rem; letter-spacing:-0.01em;}
-.service-desc{color:var(--muted-on-paper); font-size:0.98rem;}
+.service-desc{color:var(--muted-on-paper); font-size:1.08rem; line-height:1.6;}
 .service-desc a{
   display:inline-flex; align-items:center; gap:8px; margin-top:16px;
   color:var(--ink-on-paper); font-size:0.92rem; font-weight:500;
@@ -343,7 +343,7 @@ nav{
 }
 .why-cell{background:var(--paper-2); padding:36px;}
 .why-cell .value{font-family:var(--display); font-size:2.4rem; font-weight:600; color:var(--green-on-paper);}
-.why-cell .label{margin-top:10px; font-size:0.95rem; color:var(--muted-on-paper); max-width:32ch;}
+.why-cell .label{margin-top:10px; font-size:1.05rem; color:var(--muted-on-paper); max-width:32ch;}
 
 /* PROCESS */
 .process{padding:100px 0; border-bottom:1px solid var(--paper-line);}
@@ -361,8 +361,8 @@ nav{
 .content-card{
   background:var(--paper-2); border:1px solid var(--paper-line); border-radius:6px; padding:28px;
 }
-.content-card h3{font-family:var(--display); font-size:1.15rem; font-weight:600; margin-bottom:10px;}
-.content-card p{color:var(--muted-on-paper); font-size:0.95rem;}
+.content-card h3{font-family:var(--display); font-size:1.25rem; font-weight:600; margin-bottom:10px;}
+.content-card p{color:var(--muted-on-paper); font-size:1.05rem; line-height:1.55;}
 
 /* --- Pages "Design" : bande visuelle placeholder + grille éditoriale --- */
 .portfolio-strip{
@@ -375,8 +375,8 @@ nav{
   display:flex; align-items:flex-end; padding:14px;
 }
 .portfolio-tile span{
-  font-family:var(--mono); font-size:0.72rem; color:var(--muted-on-paper);
-  background:var(--paper); padding:4px 10px; border-radius:20px; border:1px solid var(--paper-line);
+  font-family:var(--mono); font-size:0.84rem; color:var(--muted-on-paper);
+  background:var(--paper); padding:5px 12px; border-radius:20px; border:1px solid var(--paper-line);
 }
 .design-grid{
   display:grid; grid-template-columns:1fr 1fr; gap:1px;
@@ -432,6 +432,8 @@ nav{
   background:var(--paper); padding:6px 14px; border-radius:20px; border:1px solid var(--paper-line);
 }
 .portfolio-bento .p-tile.has-img{background:var(--paper); padding:0; align-items:flex-end;}
+.portfolio-bento .p-tile.is-placeholder{align-items:center; justify-content:center; border-style:dashed; opacity:0.75;}
+.portfolio-bento .p-tile.is-placeholder:hover{transform:none; box-shadow:none;}
 .portfolio-bento .p-tile.has-img img{
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 }
@@ -471,10 +473,10 @@ nav{
   font-family:var(--display); font-weight:600; font-size:1.15rem;
 }
 .team-role{font-family:var(--display); font-size:1.1rem; font-weight:600; margin-bottom:6px;}
-.team-desc{color:var(--muted-on-paper); font-size:0.95rem;}
+.team-desc{color:var(--muted-on-paper); font-size:1.05rem; line-height:1.55;}
 .team-badge{
   display:inline-block; margin-top:10px; padding:4px 10px;
-  font-family:var(--mono); font-size:0.7rem; color:var(--green-on-paper);
+  font-family:var(--mono); font-size:0.82rem; color:var(--green-on-paper);
   border:1px solid var(--green-on-paper); border-radius:20px;
 }
 @media (max-width:640px){
@@ -630,9 +632,9 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
   display:flex; align-items:center; justify-content:center;
   font-family:var(--mono); font-weight:600; font-size:0.82rem; margin-bottom:18px;
 }
-.domain-card h3{font-family:var(--display); font-size:1.1rem; font-weight:600; margin-bottom:8px;}
+.domain-card h3{font-family:var(--display); font-size:1.2rem; font-weight:600; margin-bottom:8px;}
 .domain-card h3 a{color:inherit;}
-.domain-card p{color:var(--muted-on-paper); font-size:0.94rem;}
+.domain-card p{color:var(--muted-on-paper); font-size:1.05rem; line-height:1.55;}
 @media (max-width:860px){.domain-grid{grid-template-columns:1fr 1fr;}}
 @media (max-width:600px){.domain-grid{grid-template-columns:1fr;}}
 
@@ -723,8 +725,9 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
 .member-box{max-width:none; padding:32px;}
 .member-box .alert{margin-bottom:18px;}
 .form-hint{font-size:0.92rem; color:var(--muted-on-paper); margin-top:6px;}
-.offer-price{margin-top:10px; font-size:1.05rem; color:var(--muted-on-paper);}
-.offer-price.is-set{color:var(--ink-on-paper); font-weight:600; padding-left:12px; border-left:3px solid var(--green-on-paper);}
+.offer-pick[hidden]{display:none;}
+.offer-price{margin-top:10px; font-size:1.05rem; opacity:.8;}
+.offer-price.is-set{opacity:1; font-weight:600; padding-left:12px; border-left:3px solid var(--green-on-paper, #1f9d5c);}
 .form-hint a{text-decoration:underline;}
 .form-hint--spaced{margin:0 0 20px;}
 .form-row input:disabled{background:var(--paper); color:var(--muted-on-paper); cursor:not-allowed;}
