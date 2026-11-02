@@ -12,5 +12,8 @@ Chaque page de service a son dossier : `public/images/portfolio/<nom-de-la-page>
 - dossier vide = **aucune galerie** sur la page (rien d'affiché, pas de trou).
 
 Pour voir les emplacements vides en local : `GALLERY_PLACEHOLDERS=1 npm run dev`.
+Les 6 pages Design (web / UX-UI, réseaux sociaux, motion, illustration, packaging, espace) affichent toujours
+leurs 6 emplacements « Visuel à venir » tant qu'aucune image n'est déposée : c'est l'attribut `empty="true"`
+du marqueur `<!--GALLERY …-->` dans leur HTML (à ajouter sur une autre page pour obtenir le même comportement).
 
 La page `design-graphique.html` a sa propre galerie, écrite directement dans le HTML.

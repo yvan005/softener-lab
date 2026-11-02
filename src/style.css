@@ -982,3 +982,21 @@ footer{padding:56px 0 40px; background:var(--ink); color:var(--text);}
   .hero .scroll-cue,
   .hero .diagram { transition: none !important; }
 }
+
+/* BANDEAU TARIF (pages de service) — généré depuis src/data/pricing.js par vite-plugin-gallery.js */
+.price-band{padding:56px 0; border-bottom:1px solid var(--paper-line);}
+.price-band__box{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px 40px;
+  background:var(--paper-2); border:1px solid var(--paper-line); border-left:3px solid var(--green-on-paper);
+  border-radius:8px; padding:30px 34px;
+}
+.price-band__label{font-family:var(--mono); font-size:0.86rem; color:var(--green-on-paper); text-transform:uppercase; letter-spacing:0.06em;}
+.price-band__price{display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; margin-top:8px; font-family:var(--mono); font-size:0.95rem; color:var(--muted-on-paper);}
+.price-band__price strong{font-family:var(--display); font-weight:600; font-size:2.2rem; letter-spacing:-0.01em; color:var(--ink-on-paper);}
+.price-band__unit{color:var(--green-on-paper);}
+.price-band__note{margin-top:10px; font-size:0.95rem; color:var(--muted-on-paper); max-width:60ch;}
+@media (max-width:640px){
+  .price-band{padding:40px 0;}
+  .price-band__box{padding:24px 22px;}
+  .price-band__box .btn-primary{width:100%; text-align:center;}
+}

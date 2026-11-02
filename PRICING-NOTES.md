@@ -36,5 +36,8 @@ sous 300 €). Ce sont des **ordres de grandeur** relevés en octobre 2026, pas 
 | Formation Programmation Python | cours particuliers ≈ 31 € / h ; stages en entreprise 1 350 – 2 000 € | dès 250 € / personne |
 | Formation SEO International | formations en ligne 550 – 2 100 € (typiquement 700 – 1 600 €) | dès 450 € / personne |
 
+Chaque page de service affiche un bandeau « Tarif indicatif + Demander un devis » généré automatiquement depuis `src/data/pricing.js`
+(marqueur `<!--PRICE service="…"-->` dans le HTML), et les formulaires lisent le même fichier.
+
 Pour modifier un prix : éditer `src/data/pricing.js`. Pour « Design graphique », répercuter aussi le montant sur la carte
 correspondante de `design-graphique.html`.
