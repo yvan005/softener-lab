@@ -9,6 +9,9 @@ Chaque page de service a son dossier : `public/images/portfolio/<nom-de-la-page>
 - formats `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif` ; idéalement **900 × 675 px** (4:3), JPEG ≤ 150 Ko ;
 - l'**étiquette** sous l'image vient du nom du fichier : `02-site-vitrine.jpg` devient « Site vitrine » ;
   préfixez par `01-`, `02-`… pour choisir l'ordre ;
+- pour des **accents ou une apostrophe** dans l'étiquette, ajoutez un fichier `labels.json` dans le dossier
+  (voir `design-web-ux-ui/labels.json`) : `{ "01-maquette-sombre.jpg": "Maquette sombre" }` ;
+  évitez les accents dans les noms de fichiers eux-mêmes (déploiement FTP) ;
 - dossier vide = **aucune galerie** sur la page (rien d'affiché, pas de trou).
 
 Pour voir les emplacements vides en local : `GALLERY_PLACEHOLDERS=1 npm run dev`.

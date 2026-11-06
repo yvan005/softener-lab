@@ -4,6 +4,7 @@
 // Les images se déposent dans  public/images/portfolio/<nom-de-la-page>/  (ex. audit-securite/) :
 //   - formats .jpg .jpeg .png .webp .avif, triés par nom de fichier (préfixer 01-, 02-… pour choisir l'ordre) ;
 //   - l'étiquette sous chaque image vient du nom du fichier : « 02-site-vitrine.jpg » → « Site vitrine » ;
+//     pour des accents ou une apostrophe, ajouter un fichier labels.json dans le dossier : { "02-site-vitrine.jpg": "Site vitrine" } ;
 //   - les 6 premières images sont affichées. Aucune image → aucune galerie (la page reste propre).
 // Pour voir les emplacements vides pendant le développement :  GALLERY_PLACEHOLDERS=1 npm run dev
 // Un marqueur peut aussi porter  empty="true"  : la page montre alors ses 6 emplacements vides tant qu'aucune image n'est déposée.
@@ -73,8 +74,15 @@ export function portfolioGallery({ max = 6 } = {}) {
         const title = attr(marker[1], 'title') || 'Exemples de réalisations';
         const lead = attr(marker[1], 'lead') || 'Un aperçu de nos réalisations dans ce domaine.';
 
+        let custom = {};
+        try {
+          custom = JSON.parse(fs.readFileSync(path.join(dir, 'labels.json'), 'utf-8'));
+        } catch {
+          /* pas de labels.json : étiquettes déduites des noms de fichiers */
+        }
+
         const tiles = files.map((file) => {
-          const label = labelOf(file);
+          const label = custom[file] || labelOf(file);
           return `      <div class="p-tile has-img"><img src="/images/portfolio/${slug}/${encodeURIComponent(file)}" alt="${esc(label)}" loading="lazy"><span>${esc(label)}</span></div>`;
         });
         if (showEmpty) {
