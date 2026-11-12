@@ -7,7 +7,8 @@
 //     pour des accents ou une apostrophe, ajouter un fichier labels.json dans le dossier : { "02-site-vitrine.jpg": "Site vitrine" } ;
 //   - les 6 premières images sont affichées. Aucune image → aucune galerie (la page reste propre).
 // Pour voir les emplacements vides pendant le développement :  GALLERY_PLACEHOLDERS=1 npm run dev
-// Un marqueur peut aussi porter  empty="true"  : la page montre alors ses 6 emplacements vides tant qu'aucune image n'est déposée.
+// Un marqueur peut porter  ratio="1:1"  : vignettes carrées (idéal pour des posts de réseaux sociaux ; images en 900 × 900).
+// Il peut aussi porter  empty="true"  : la page montre alors ses 6 emplacements vides tant qu'aucune image n'est déposée.
 //
 // Même module : le marqueur  <!--PRICE service="Applications web"-->  insère un bandeau « À partir de X € HT +
 // Demander un devis » à partir de src/data/pricing.js (une seule source de prix pour les formulaires et les pages).
@@ -71,6 +72,7 @@ export function portfolioGallery({ max = 6 } = {}) {
         const showEmpty = process.env.GALLERY_PLACEHOLDERS === '1' || attr(marker[1], 'empty') === 'true';
         if (!files.length && !showEmpty) return html.replace(marker[0], '');
 
+        const square = attr(marker[1], 'ratio') === '1:1';
         const title = attr(marker[1], 'title') || 'Exemples de réalisations';
         const lead = attr(marker[1], 'lead') || 'Un aperçu de nos réalisations dans ce domaine.';
 
@@ -95,7 +97,7 @@ export function portfolioGallery({ max = 6 } = {}) {
       <h2>${esc(title)}</h2>
       <p>${esc(lead)}</p>
     </div>
-    <div class="portfolio-bento">
+    <div class="portfolio-bento${square ? ' portfolio-bento--square' : ''}">
 ${tiles.join('\n')}
     </div>
     <div class="portfolio-note"><span class="dot"></span> ${files.length ? "D'autres réalisations seront ajoutées régulièrement à cette galerie." : 'Portfolio en cours de constitution — les premiers visuels seront ajoutés ici.'}</div>

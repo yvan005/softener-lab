@@ -427,6 +427,7 @@ nav{
   display:flex; align-items:flex-end; padding:18px;
   transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
+.portfolio-bento--square .p-tile{aspect-ratio:1/1;}
 .portfolio-bento .p-tile:hover{
   border-color:var(--green-on-paper); transform:translateY(-3px);
   box-shadow:0 16px 32px -16px rgba(14,18,16,0.25);

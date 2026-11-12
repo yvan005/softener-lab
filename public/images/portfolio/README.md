@@ -19,4 +19,7 @@ Les 6 pages Design (web / UX-UI, réseaux sociaux, motion, illustration, packagi
 leurs 6 emplacements « Visuel à venir » tant qu'aucune image n'est déposée : c'est l'attribut `empty="true"`
 du marqueur `<!--GALLERY …-->` dans leur HTML (à ajouter sur une autre page pour obtenir le même comportement).
 
+Pour des images **carrées** (posts de réseaux sociaux), ajoutez `ratio="1:1"` au marqueur `<!--GALLERY …-->` de la page
+(déjà fait sur `design-reseaux-sociaux.html`) et déposez des images de 900 × 900 px.
+
 La page `design-graphique.html` a sa propre galerie, écrite directement dans le HTML.
