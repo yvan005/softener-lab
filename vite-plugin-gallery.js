@@ -2,7 +2,9 @@
 //
 // Sur chaque page concernée, un marqueur  <!--GALLERY title="…" lead="…"-->  indique où insérer la galerie.
 // Les images se déposent dans  public/images/portfolio/<nom-de-la-page>/  (ex. audit-securite/) :
-//   - formats .jpg .jpeg .png .webp .avif, triés par nom de fichier (préfixer 01-, 02-… pour choisir l'ordre) ;
+//   - formats .jpg .jpeg .png .webp .avif et vidéos .mp4 .webm, triés par nom de fichier (préfixer 01-, 02-… pour choisir l'ordre) ;
+//   - une vidéo est lue en boucle, sans son, quand la vignette est visible. Une image du même nom (01-ma-video.jpg
+//     à côté de 01-ma-video.mp4) sert d'aperçu et n'est pas comptée comme une vignette ; vidéos à compresser (≈ 500 Ko) ;
 //   - l'étiquette sous chaque image vient du nom du fichier : « 02-site-vitrine.jpg » → « Site vitrine » ;
 //     pour des accents ou une apostrophe, ajouter un fichier labels.json dans le dossier : { "02-site-vitrine.jpg": "Site vitrine" } ;
 //   - les 6 premières images sont affichées. Aucune image → aucune galerie (la page reste propre).
@@ -16,7 +18,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { SERVICE_PRICING } from './src/data/pricing.js';
 
-const EXT = /\.(jpe?g|png|webp|avif)$/i;
+const IMG = /\.(jpe?g|png|webp|avif)$/i;
+const VID = /\.(mp4|webm)$/i;
+const EXT = /\.(jpe?g|png|webp|avif|mp4|webm)$/i;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const attr = (src, name) => (src.match(new RegExp(`${name}="([^"]*)"`)) || [])[1];
 
@@ -66,9 +70,14 @@ export function portfolioGallery({ max = 6 } = {}) {
 
         const slug = path.basename(ctx.filename || ctx.path || '').replace(/\.html?$/, '');
         const dir = path.join(root, 'public', 'images', 'portfolio', slug);
-        const files = fs.existsSync(dir)
-          ? fs.readdirSync(dir).filter((f) => EXT.test(f)).sort((a, b) => a.localeCompare(b, 'fr', { numeric: true })).slice(0, max)
-          : [];
+        const all = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => EXT.test(f)) : [];
+        const stem = (f) => f.replace(EXT, '');
+        const videoStems = new Set(all.filter((f) => VID.test(f)).map(stem));
+        const poster = (video) => all.find((f) => IMG.test(f) && stem(f) === stem(video));
+        const files = all
+          .filter((f) => VID.test(f) || !videoStems.has(stem(f))) // une image du même nom qu'une vidéo = son aperçu
+          .sort((a, b) => a.localeCompare(b, 'fr', { numeric: true }))
+          .slice(0, max);
         const showEmpty = process.env.GALLERY_PLACEHOLDERS === '1' || attr(marker[1], 'empty') === 'true';
         if (!files.length && !showEmpty) return html.replace(marker[0], '');
 
@@ -85,7 +94,14 @@ export function portfolioGallery({ max = 6 } = {}) {
 
         const tiles = files.map((file) => {
           const label = custom[file] || labelOf(file);
-          return `      <div class="p-tile has-img"><img src="/images/portfolio/${slug}/${encodeURIComponent(file)}" alt="${esc(label)}" loading="lazy"><span>${esc(label)}</span></div>`;
+          const url = `/images/portfolio/${slug}/${encodeURIComponent(file)}`;
+          if (VID.test(file)) {
+            const p = poster(file);
+            const posterAttr = p ? ` poster="/images/portfolio/${slug}/${encodeURIComponent(p)}"` : '';
+            const posterImg = p ? `<img class="p-poster" src="/images/portfolio/${slug}/${encodeURIComponent(p)}" alt="" loading="lazy">` : '';
+            return `      <div class="p-tile has-img has-video"><video src="${url}"${posterAttr} muted loop playsinline preload="none" aria-label="${esc(label)}"></video>${posterImg}<span>${esc(label)}</span></div>`;
+          }
+          return `      <div class="p-tile has-img"><img src="${url}" alt="${esc(label)}" loading="lazy"><span>${esc(label)}</span></div>`;
         });
         if (showEmpty) {
           while (tiles.length < max) tiles.push('      <div class="p-tile is-placeholder"><span>Visuel à venir</span></div>');

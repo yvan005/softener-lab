@@ -7,6 +7,9 @@ Chaque page de service a son dossier : `public/images/portfolio/<nom-de-la-page>
 
 - jusqu'à **6 images** affichées (les 6 premières, par ordre alphabétique du nom de fichier) ;
 - formats `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif` ; idéalement **900 × 675 px** (4:3), JPEG ≤ 150 Ko ;
+- des **vidéos** `.mp4` / `.webm` sont acceptées (voir `motion-design/`) : lues en boucle, sans son, quand la vignette
+  est visible. Prévoir une image du même nom comme aperçu (`01-ma-video.jpg` à côté de `01-ma-video.mp4`), et
+  compresser la vidéo (≈ 500 Ko, 900 × 675 px, sans piste audio) ;
 - l'**étiquette** sous l'image vient du nom du fichier : `02-site-vitrine.jpg` devient « Site vitrine » ;
   préfixez par `01-`, `02-`… pour choisir l'ordre ;
 - pour des **accents ou une apostrophe** dans l'étiquette, ajoutez un fichier `labels.json` dans le dossier

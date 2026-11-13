@@ -374,6 +374,39 @@ async function refreshNotifications() {
   renderNotifItems(data.items);
 }
 
+// Vignettes vidéo des galeries (vite-plugin-gallery.js) : lecture silencieuse en boucle quand la vignette est
+// visible, pause hors écran. Pas de lecture automatique en mode « réduction des animations » ni en économie de
+// données : l'image d'aperçu reste affichée et un clic sur la vignette lance / arrête la vidéo.
+function initGalleryVideos() {
+  const videos = document.querySelectorAll('.portfolio-bento video');
+  if (!videos.length) return;
+
+  const setPlaying = (video, on) => video.closest('.p-tile').classList.toggle('is-playing', on);
+  const play = (video) => {
+    const started = video.play();
+    if (started && started.catch) started.catch(() => setPlaying(video, false));
+    setPlaying(video, true);
+  };
+  const pause = (video) => {
+    video.pause();
+    setPlaying(video, false);
+  };
+
+  videos.forEach((video) => {
+    video.closest('.p-tile').addEventListener('click', () => (video.paused ? play(video) : pause(video)));
+  });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  if (reduceMotion || saveData || !('IntersectionObserver' in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => entries.forEach((e) => (e.isIntersecting ? play(e.target) : pause(e.target))),
+    { threshold: 0.5 }
+  );
+  videos.forEach((video) => observer.observe(video));
+}
+
 function initNotifications() {
   const navItem = document.getElementById('notif-nav-item');
   const list = document.getElementById('notif-list');
@@ -412,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
   mountBackToTop();
   prefillContactService();
   initServiceOffers();
+  initGalleryVideos();
   mountContactForm();
   initPasswordToggles();
   initNotifications();
