@@ -86,6 +86,17 @@ function initMobileMenu() {
   });
 }
 
+// Boutons d'action (« Nous contacter ») : un membre connecté voit « Demander un devis » à la place, un visiteur non
+// inscrit voit « Nous contacter ». Le libellé membre est porté par data-member-label dans le HTML ; le dernier état connu
+// est gardé dans localStorage pour éviter de voir le mauvais libellé le temps de l'appel à /session-status.php.
+const MEMBER_FLAG = 'sl_member';
+function applyMemberCtas(isMember) {
+  document.querySelectorAll('[data-member-label]').forEach((el) => {
+    if (!el.dataset.guestLabel) el.dataset.guestLabel = el.textContent;
+    el.textContent = isMember ? el.dataset.memberLabel : el.dataset.guestLabel;
+  });
+}
+
 async function syncAccountMenu() {
   const avatar = document.getElementById('account-avatar');
   const nameEl = document.getElementById('account-name');
@@ -99,6 +110,15 @@ async function syncAccountMenu() {
     // Si l'appel échoue, on garde l'icône et le menu par défaut (visiteur non connecté).
     return;
   }
+
+  const isMember = Boolean(data && data.loggedIn);
+  try {
+    if (isMember) localStorage.setItem(MEMBER_FLAG, '1');
+    else localStorage.removeItem(MEMBER_FLAG);
+  } catch (e) {
+    /* stockage indisponible (navigation privée…) : sans conséquence */
+  }
+  applyMemberCtas(isMember);
 
   if (avatar && nameEl && menu && data && data.loggedIn) {
     const firstName = (data.name || '').split(' ')[0] || 'Mon compte';
@@ -441,6 +461,11 @@ document.addEventListener('DOMContentLoaded', () => {
   refreshTranslations(); // applique la langue au header/footer qui viennent d'être injectés
   initNavDropdowns();
   initMobileMenu();
+  try {
+    applyMemberCtas(localStorage.getItem(MEMBER_FLAG) === '1');
+  } catch (e) {
+    /* pas de stockage : on part de l'état « visiteur » */
+  }
   syncAccountMenu();
   mountBackToTop();
   prefillContactService();

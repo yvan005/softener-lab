@@ -13,7 +13,7 @@
 // Il peut aussi porter  empty="true"  : la page montre alors ses 6 emplacements vides tant qu'aucune image n'est déposée.
 //
 // Même module : le marqueur  <!--PRICE service="Applications web"-->  insère un bandeau « À partir de X € HT +
-// Demander un devis » à partir de src/data/pricing.js (une seule source de prix pour les formulaires et les pages).
+// Nous contacter » (« Demander un devis » pour un membre connecté, voir main.js) à partir de src/data/pricing.js (une seule source de prix pour les formulaires et les pages).
 import fs from 'node:fs';
 import path from 'node:path';
 import { SERVICE_PRICING } from './src/data/pricing.js';
@@ -47,7 +47,7 @@ function renderPriceBand(service) {
         <div class="price-band__price"><span class="price-band__from">${esc(parts.from)}</span> <strong>${esc(parts.amount)}&nbsp;€</strong> <span class="price-band__tax">HT</span>${parts.unit ? ` <span class="price-band__unit">/ ${esc(parts.unit)}</span>` : ''}</div>
         <p class="price-band__note">${esc(note)}</p>
       </div>
-      <a class="btn-primary" href="/contact.html?service=${encodeURIComponent(service)}">Demander un devis</a>
+      <a class="btn-primary" href="/contact.html?service=${encodeURIComponent(service)}" data-member-label="Demander un devis">Nous contacter</a>
     </div>
   </div>
 </section>
