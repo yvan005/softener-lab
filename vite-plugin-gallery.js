@@ -1,4 +1,4 @@
-// Galerie « Exemples de réalisations » (6 images maximum) construite à la compilation.
+// Galerie « Exemples de modèles » (6 images maximum) construite à la compilation.
 //
 // Sur chaque page concernée, un marqueur  <!--GALLERY title="…" lead="…"-->  indique où insérer la galerie.
 // Les images se déposent dans  public/images/portfolio/<nom-de-la-page>/  (ex. audit-securite/) :
@@ -26,7 +26,7 @@ const attr = (src, name) => (src.match(new RegExp(`${name}="([^"]*)"`)) || [])[1
 
 const labelOf = (file) => {
   const base = file.replace(EXT, '').replace(/^\d+[\s._-]*/, '').replace(/[-_]+/g, ' ').trim();
-  return base ? base.charAt(0).toUpperCase() + base.slice(1) : 'Réalisation';
+  return base ? base.charAt(0).toUpperCase() + base.slice(1) : 'Modèle';
 };
 
 const priceParts = (text) => {
@@ -82,8 +82,8 @@ export function portfolioGallery({ max = 6 } = {}) {
         if (!files.length && !showEmpty) return html.replace(marker[0], '');
 
         const square = attr(marker[1], 'ratio') === '1:1';
-        const title = attr(marker[1], 'title') || 'Exemples de réalisations';
-        const lead = attr(marker[1], 'lead') || 'Un aperçu de nos réalisations dans ce domaine.';
+        const title = attr(marker[1], 'title') || 'Exemples de modèles';
+        const lead = attr(marker[1], 'lead') || 'Un aperçu de nos modèles dans ce domaine.';
 
         let custom = {};
         try {
@@ -116,7 +116,7 @@ export function portfolioGallery({ max = 6 } = {}) {
     <div class="portfolio-bento${square ? ' portfolio-bento--square' : ''}">
 ${tiles.join('\n')}
     </div>
-    <div class="portfolio-note"><span class="dot"></span> ${files.length ? "D'autres réalisations seront ajoutées régulièrement à cette galerie." : 'Portfolio en cours de constitution — les premiers visuels seront ajoutés ici.'}</div>
+    <div class="portfolio-note"><span class="dot"></span> ${files.length ? "D'autres modèles seront ajoutés régulièrement à cette galerie." : 'Portfolio en cours de constitution — les premiers visuels seront ajoutés ici.'}</div>
   </div>
 </section>
 `;

@@ -1,4 +1,4 @@
-# Galeries « Exemples de réalisations »
+# Galeries « Exemples de modèles »
 
 Chaque page de service a son dossier : `public/images/portfolio/<nom-de-la-page>/`
 (ex. `audit-securite/`, `modele-promotion/`, `formation-bureautique/`).
