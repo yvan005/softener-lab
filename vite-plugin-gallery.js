@@ -9,6 +9,9 @@
 //     pour des accents ou une apostrophe, ajouter un fichier labels.json dans le dossier : { "02-site-vitrine.jpg": "Site vitrine" } ;
 //   - les 6 premières images sont affichées. Aucune image → aucune galerie (la page reste propre).
 // Pour voir les emplacements vides pendant le développement :  GALLERY_PLACEHOLDERS=1 npm run dev
+// Dispositions spéciales :  layout="web" (grand écran + tablette + téléphone), layout="phones" (téléphones décalés),
+// layout="stack" (écran principal + modules). Avec  parallax="true", les vignettes se décalent légèrement au défilement
+// (src/main.js : désactivé si le visiteur réduit les animations ou économise les données).  note="…"  remplace la note du bas.
 // Un marqueur peut porter  ratio="1:1"  : vignettes carrées (idéal pour des posts de réseaux sociaux ; images en 900 × 900).
 // Il peut aussi porter  empty="true"  : la page montre alors ses 6 emplacements vides tant qu'aucune image n'est déposée.
 //
@@ -82,6 +85,9 @@ export function portfolioGallery({ max = 6 } = {}) {
         if (!files.length && !showEmpty) return html.replace(marker[0], '');
 
         const square = attr(marker[1], 'ratio') === '1:1';
+        const layout = ['web', 'phones', 'stack'].includes(attr(marker[1], 'layout')) ? attr(marker[1], 'layout') : '';
+        const parallax = layout && attr(marker[1], 'parallax') === 'true';
+        const note = attr(marker[1], 'note');
         const title = attr(marker[1], 'title') || 'Exemples de modèles';
         const lead = attr(marker[1], 'lead') || 'Un aperçu de nos modèles dans ce domaine.';
 
@@ -113,10 +119,10 @@ export function portfolioGallery({ max = 6 } = {}) {
       <h2>${esc(title)}</h2>
       <p>${esc(lead)}</p>
     </div>
-    <div class="portfolio-bento${square ? ' portfolio-bento--square' : ''}">
+    <div class="portfolio-bento${square ? ' portfolio-bento--square' : ''}${layout ? ` portfolio-bento--${layout}` : ''}"${parallax ? ` data-parallax="${layout}"` : ''}>
 ${tiles.join('\n')}
     </div>
-    <div class="portfolio-note"><span class="dot"></span> ${files.length ? "D'autres modèles seront ajoutés régulièrement à cette galerie." : 'Portfolio en cours de constitution — les premiers visuels seront ajoutés ici.'}</div>
+    <div class="portfolio-note"><span class="dot"></span> ${files.length ? esc(note || "D'autres modèles seront ajoutés régulièrement à cette galerie.") : 'Portfolio en cours de constitution — les premiers visuels seront ajoutés ici.'}</div>
   </div>
 </section>
 `;

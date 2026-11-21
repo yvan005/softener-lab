@@ -427,6 +427,64 @@ function initGalleryVideos() {
   videos.forEach((video) => observer.observe(video));
 }
 
+// Parallax des galeries « développement » (data-parallax="web|phones|stack", posé par vite-plugin-gallery.js) :
+// chaque vignette se décale un peu à sa propre vitesse quand la galerie traverse l'écran, et revient alignée quand
+// la galerie est centrée. Désactivé en mode « réduction des animations » et en économie de données ; seules les galeries
+// proches de l'écran sont recalculées ; amplitude réduite sur petit écran.
+function initGalleryParallax() {
+  const grids = Array.from(document.querySelectorAll('.portfolio-bento[data-parallax]'));
+  if (!grids.length || !('IntersectionObserver' in window)) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  if (reduceMotion || saveData) return;
+
+  // amplitude (px) atteinte par chaque vignette quand la galerie entre ou sort de l'écran ; 0 au centre
+  const AMP = { web: [6, 18, 28], phones: [10, 28, 18, 34], stack: [3, 6, 6] };
+  const items = grids.map((el) => ({
+    el,
+    tiles: Array.from(el.querySelectorAll('.p-tile')),
+    amps: AMP[el.dataset.parallax] || [14],
+    near: false,
+  }));
+
+  let queued = false;
+  const update = () => {
+    queued = false;
+    const vh = window.innerHeight;
+    const scale = window.innerWidth < 640 ? 0.6 : 1;
+    items.forEach((it) => {
+      if (!it.near) return;
+      const r = it.el.getBoundingClientRect();
+      const range = vh / 2 + r.height / 2; // distance centre-écran → bord au moment où la galerie entre / sort
+      const progress = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / range)); // -1 … 0 … 1
+      it.tiles.forEach((tile, i) => {
+        const y = -progress * it.amps[i % it.amps.length] * scale;
+        tile.style.setProperty('--py', `${y.toFixed(1)}px`);
+      });
+    });
+  };
+  const request = () => {
+    if (!queued) {
+      queued = true;
+      window.requestAnimationFrame(update);
+    }
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        const it = items.find((x) => x.el === e.target);
+        if (it) it.near = e.isIntersecting;
+      });
+      request();
+    },
+    { rootMargin: '200px 0px' }
+  );
+  items.forEach((it) => observer.observe(it.el));
+  window.addEventListener('scroll', request, { passive: true });
+  window.addEventListener('resize', request);
+}
+
 function initNotifications() {
   const navItem = document.getElementById('notif-nav-item');
   const list = document.getElementById('notif-list');
@@ -471,6 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
   prefillContactService();
   initServiceOffers();
   initGalleryVideos();
+  initGalleryParallax();
   mountContactForm();
   initPasswordToggles();
   initNotifications();

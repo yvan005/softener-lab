@@ -428,6 +428,38 @@ nav{
   transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 .portfolio-bento--square .p-tile{aspect-ratio:1/1;}
+/* ── Dispositions « développement » (images en captures d'écran) ───────────────────────────────── */
+/* web : grand écran à gauche (ordinateur), tablette et téléphone à droite */
+.portfolio-bento--web{grid-template-columns:2fr 1fr; grid-template-rows:auto auto;}
+.portfolio-bento--web .p-tile{aspect-ratio:16/10;}
+.portfolio-bento--web .p-tile:nth-child(1){grid-row:1 / span 2; aspect-ratio:auto;}
+.portfolio-bento--web .p-tile.has-img img{object-position:center top;}
+/* phones : quatre téléphones en quinconce */
+.portfolio-bento--phones{display:flex; justify-content:center; align-items:flex-start; gap:22px; padding-bottom:52px;}
+.portfolio-bento--phones .p-tile{
+  flex:0 1 23%; aspect-ratio:720/1508; border:6px solid #0e1210; border-radius:28px; background:#0e1210;
+}
+.portfolio-bento--phones .p-tile:nth-child(even){margin-top:44px;}
+.portfolio-bento--phones .p-tile.has-img img{border-radius:20px;}
+/* stack : écran principal pleine largeur, modules en dessous */
+.portfolio-bento--stack{grid-template-columns:1fr 1fr;}
+.portfolio-bento--stack .p-tile{aspect-ratio:1920/901;}
+.portfolio-bento--stack .p-tile:nth-child(1){grid-column:1 / -1;}
+/* parallax : décalage vertical piloté par src/main.js (variable --py) */
+.portfolio-bento[data-parallax] .p-tile{
+  transform:translate3d(0,var(--py,0px),0); will-change:transform;
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+.portfolio-bento[data-parallax] .p-tile:hover{transform:translate3d(0,calc(var(--py,0px) - 3px),0);}
+@media (max-width:640px){
+  .portfolio-bento--web{grid-template-columns:1fr 1fr;}
+  .portfolio-bento--web .p-tile:nth-child(1){grid-column:1 / -1; grid-row:auto; aspect-ratio:16/10;}
+  .portfolio-bento--phones{display:grid; grid-template-columns:1fr 1fr; gap:14px; padding-bottom:24px;}
+  .portfolio-bento--phones .p-tile{border-width:4px; border-radius:20px;}
+  .portfolio-bento--phones .p-tile:nth-child(even){margin-top:22px;}
+  .portfolio-bento--phones .p-tile.has-img img{border-radius:15px;}
+}
+
 .portfolio-bento .p-tile:hover{
   border-color:var(--green-on-paper); transform:translateY(-3px);
   box-shadow:0 16px 32px -16px rgba(14,18,16,0.25);
