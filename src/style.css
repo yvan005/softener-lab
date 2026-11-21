@@ -412,53 +412,43 @@ nav{
   color:var(--ink-on-paper);
 }
 .design-price__unit{color:var(--green-on-paper);}
-/* --- Portfolio "showcase" : mise en avant en bento, section dédiée en pleine largeur --- */
+/* --- Portfolio "showcase" : galeries positionnées selon la référence visuelle --- */
 .portfolio-showcase{padding:90px 0 100px; border-bottom:1px solid var(--paper-line); background:var(--paper-2);}
-.portfolio-bento{
-  display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
-  margin-top:48px;
-}
-.portfolio-bento .p-tile{
-  aspect-ratio:4/3; border-radius:10px; position:relative; overflow:hidden;
-  background:
-    radial-gradient(circle at 1px 1px, var(--paper-line) 1px, transparent 0) 0 0/16px 16px,
-    var(--paper);
-  border:1px solid var(--paper-line);
-  display:flex; align-items:flex-end; padding:18px;
-  transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
-}
+.portfolio-bento{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:48px;align-items:stretch;}
+.portfolio-bento .p-tile{min-width:0;aspect-ratio:4/3;border-radius:10px;position:relative;overflow:hidden;background:radial-gradient(circle at 1px 1px,var(--paper-line) 1px,transparent 0) 0 0/16px 16px,var(--paper);border:1px solid var(--paper-line);display:flex;align-items:flex-end;padding:18px;transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease;}
 .portfolio-bento--square .p-tile{aspect-ratio:1/1;}
-/* ── Dispositions « développement » (images en captures d'écran) ───────────────────────────────── */
-/* web : grand écran à gauche (ordinateur), tablette et téléphone à droite */
-.portfolio-bento--web{grid-template-columns:2fr 1fr; grid-template-rows:auto auto;}
+
+/* Applications web : grand écran à gauche, tablette et téléphone empilés à droite */
+.portfolio-bento--web{grid-template-columns:minmax(0,2fr) minmax(0,1fr);grid-template-rows:repeat(2,minmax(150px,1fr));min-height:390px;}
 .portfolio-bento--web .p-tile{aspect-ratio:16/10;}
-.portfolio-bento--web .p-tile:nth-child(1){grid-row:1 / span 2; aspect-ratio:auto;}
-.portfolio-bento--web .p-tile.has-img img{object-position:center top;}
-/* phones : quatre téléphones en quinconce */
-.portfolio-bento--phones{display:flex; justify-content:center; align-items:flex-start; gap:22px; padding-bottom:52px;}
-.portfolio-bento--phones .p-tile{
-  flex:0 1 23%; aspect-ratio:720/1508; border:6px solid #0e1210; border-radius:28px; background:#0e1210;
-}
-.portfolio-bento--phones .p-tile:nth-child(even){margin-top:44px;}
-.portfolio-bento--phones .p-tile.has-img img{border-radius:20px;}
-/* stack : écran principal pleine largeur, modules en dessous */
-.portfolio-bento--stack{grid-template-columns:1fr 1fr;}
+.portfolio-bento--web .p-tile:nth-child(1){grid-column:1;grid-row:1 / span 2;aspect-ratio:auto;min-height:100%;}
+.portfolio-bento--web .p-tile:nth-child(2){grid-column:2;grid-row:1;}
+.portfolio-bento--web .p-tile:nth-child(3){grid-column:2;grid-row:2;}
+.portfolio-bento--web .p-tile.has-img img{object-position:center;}
+
+/* Applications mobiles : quatre téléphones en quinconce */
+.portfolio-bento--phones{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:22px;padding:0 3% 52px;}
+.portfolio-bento--phones .p-tile{width:100%;aspect-ratio:540/1131;border:6px solid #0e1210;border-radius:28px;background:#0e1210;padding:0;}
+.portfolio-bento--phones .p-tile:nth-child(1){margin-top:0;}
+.portfolio-bento--phones .p-tile:nth-child(2){margin-top:44px;}
+.portfolio-bento--phones .p-tile:nth-child(3){margin-top:10px;}
+.portfolio-bento--phones .p-tile:nth-child(4){margin-top:40px;}
+.portfolio-bento--phones .p-tile.has-img img{border-radius:20px;object-fit:cover;}
+
+/* Logiciels métier : tableau de bord en haut, deux modules en dessous */
+.portfolio-bento--stack{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row;}
 .portfolio-bento--stack .p-tile{aspect-ratio:1920/901;}
-.portfolio-bento--stack .p-tile:nth-child(1){grid-column:1 / -1;}
-/* parallax : décalage vertical piloté par src/main.js (variable --py) */
-.portfolio-bento[data-parallax] .p-tile{
-  transform:translate3d(0,var(--py,0px),0); will-change:transform;
-  transition:border-color .18s ease, box-shadow .18s ease;
-}
+.portfolio-bento--stack .p-tile:nth-child(1){grid-column:1 / -1;aspect-ratio:1920/901;}
+.portfolio-bento--stack .p-tile:nth-child(2){grid-column:1;}
+.portfolio-bento--stack .p-tile:nth-child(3){grid-column:2;}
+
+/* Images et vidéos remplissent leurs cadres sans déformation */
+.portfolio-bento .p-tile.has-img{background:var(--paper);padding:0;align-items:flex-end;}
+.portfolio-bento .p-tile.has-img img,.portfolio-bento .p-tile.has-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.portfolio-bento .p-tile.is-placeholder{align-items:center;justify-content:center;border-style:dashed;opacity:.75;}
+.portfolio-bento .p-tile.is-placeholder:hover{transform:none;box-shadow:none;}
+.portfolio-bento[data-parallax] .p-tile{transform:translate3d(0,var(--py,0px),0);will-change:transform;transition:border-color .18s ease,box-shadow .18s ease;}
 .portfolio-bento[data-parallax] .p-tile:hover{transform:translate3d(0,calc(var(--py,0px) - 3px),0);}
-@media (max-width:640px){
-  .portfolio-bento--web{grid-template-columns:1fr 1fr;}
-  .portfolio-bento--web .p-tile:nth-child(1){grid-column:1 / -1; grid-row:auto; aspect-ratio:16/10;}
-  .portfolio-bento--phones{display:grid; grid-template-columns:1fr 1fr; gap:14px; padding-bottom:24px;}
-  .portfolio-bento--phones .p-tile{border-width:4px; border-radius:20px;}
-  .portfolio-bento--phones .p-tile:nth-child(even){margin-top:22px;}
-  .portfolio-bento--phones .p-tile.has-img img{border-radius:15px;}
-}
 
 .portfolio-bento .p-tile:hover{
   border-color:var(--green-on-paper); transform:translateY(-3px);
@@ -497,16 +487,29 @@ nav{
 }
 .portfolio-note .dot{width:6px; height:6px; border-radius:50%; background:var(--green-on-paper); flex-shrink:0;}
 @media (max-width:900px){
-  .portfolio-bento{grid-template-columns:repeat(2, 1fr);}
+  .portfolio-bento--web{min-height:340px;}
+  .portfolio-bento--phones{gap:14px;padding-left:0;padding-right:0;}
+  .portfolio-bento--phones .p-tile{border-width:5px;border-radius:23px;}
 }
 @media (max-width:640px){
-  .portfolio-bento{grid-template-columns:repeat(2, 1fr); gap:10px; margin-top:32px;}
-  .portfolio-bento .p-tile.has-img span{margin:8px; font-size:0.78rem; line-height:1.3; padding:3px 9px; border-radius:12px;}
+  .portfolio-bento{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:32px;}
+  .portfolio-bento--web{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;min-height:0;}
+  .portfolio-bento--web .p-tile:nth-child(1){grid-column:1 / -1;grid-row:auto;aspect-ratio:16/10;min-height:0;}
+  .portfolio-bento--web .p-tile:nth-child(2),.portfolio-bento--web .p-tile:nth-child(3){grid-row:auto;aspect-ratio:16/10;}
+  .portfolio-bento--phones{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 8% 24px;}
+  .portfolio-bento--phones .p-tile{border-width:4px;border-radius:20px;}
+  .portfolio-bento--phones .p-tile:nth-child(2){margin-top:22px;}
+  .portfolio-bento--phones .p-tile:nth-child(3){margin-top:0;}
+  .portfolio-bento--phones .p-tile:nth-child(4){margin-top:22px;}
+  .portfolio-bento--stack{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .portfolio-bento--stack .p-tile:nth-child(1){grid-column:1 / -1;}
+  .portfolio-bento .p-tile.has-img span{margin:8px;font-size:.78rem;line-height:1.3;padding:3px 9px;border-radius:12px;}
   .portfolio-strip{grid-template-columns:1fr;}
   .design-grid{grid-template-columns:1fr;}
 }
 
 /* --- Pages "À propos" : cartes de profil dédiées (équipe, carrière) --- */
+
 .team-grid{
   display:grid; grid-template-columns:1fr; gap:1px;
   background:var(--paper-line); border:1px solid var(--paper-line); border-radius:8px;
