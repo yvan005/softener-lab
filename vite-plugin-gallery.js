@@ -72,6 +72,12 @@ export function portfolioGallery({ max = 6 } = {}) {
         if (!marker) return html;
 
         const slug = path.basename(ctx.filename || ctx.path || '').replace(/\.html?$/, '');
+        const securityPages = new Set([
+          'audit-securite', 'test-intrusion', 'conseil-strategie',
+          'formation-sensibilisation', 'securite-reseau', 'reponse-incident',
+          'securite-cloud', 'securite-applications',
+        ]);
+        const securityClass = securityPages.has(slug) ? ' portfolio-showcase--security' : '';
         const dir = path.join(root, 'public', 'images', 'portfolio', slug);
         const all = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => EXT.test(f)) : [];
         const stem = (f) => f.replace(EXT, '');
@@ -113,7 +119,7 @@ export function portfolioGallery({ max = 6 } = {}) {
           while (tiles.length < max) tiles.push('      <div class="p-tile is-placeholder"><span>Visuel à venir</span></div>');
         }
 
-        const block = `<section class="portfolio-showcase">
+        const block = `<section class="portfolio-showcase${securityClass}">
   <div class="wrap">
     <div class="section-head">
       <h2>${esc(title)}</h2>
