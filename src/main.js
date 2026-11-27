@@ -439,7 +439,7 @@ function initGalleryParallax() {
   if (reduceMotion || saveData) return;
 
   // amplitude (px) atteinte par chaque vignette quand la galerie entre ou sort de l'écran ; 0 au centre
-  const AMP = { web: [6, 18, 28], phones: [10, 28, 18, 34], stack: [3, 6, 6] };
+  const AMP = { web: [6, 18, 28], phones: [10, 28, 18, 34], stack: [3, 6, 6], flyers: [22, 12, 30] };
   const items = grids.map((el) => ({
     el,
     tiles: Array.from(el.querySelectorAll('.p-tile')),

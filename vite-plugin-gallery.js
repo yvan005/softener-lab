@@ -91,7 +91,7 @@ export function portfolioGallery({ max = 6 } = {}) {
         if (!files.length && !showEmpty) return html.replace(marker[0], '');
 
         const square = attr(marker[1], 'ratio') === '1:1';
-        const layout = ['web', 'phones', 'stack'].includes(attr(marker[1], 'layout')) ? attr(marker[1], 'layout') : '';
+        const layout = ['web', 'phones', 'stack', 'flyers'].includes(attr(marker[1], 'layout')) ? attr(marker[1], 'layout') : '';
         const parallax = layout && attr(marker[1], 'parallax') === 'true';
         const note = attr(marker[1], 'note');
         const title = attr(marker[1], 'title') || 'Exemples de modèles';

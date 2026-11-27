@@ -443,6 +443,45 @@ nav{
 .portfolio-bento--stack .p-tile:nth-child(3){grid-column:2;}
 .portfolio-bento--stack .p-tile.has-img img{object-fit:contain;background:#06162b;}
 
+/* Flyers événementiels : trois affiches verticales en profondeur, avec défilement différencié */
+.portfolio-bento--flyers{
+  grid-template-columns:1.12fr .88fr .88fr;
+  align-items:center;
+  gap:clamp(14px,2.4vw,30px);
+  padding:18px 2% 34px;
+  perspective:1100px;
+}
+.portfolio-bento--flyers .p-tile{
+  aspect-ratio:3/4.1;
+  border-radius:8px;
+  padding:0;
+  background:#10142a;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 24px 48px -24px rgba(10,15,35,.55);
+  transform-style:preserve-3d;
+}
+.portfolio-bento--flyers .p-tile:nth-child(1){transform:translate3d(0,var(--py,0px),0) rotateY(5deg) scale(1.035);z-index:2;}
+.portfolio-bento--flyers .p-tile:nth-child(2){transform:translate3d(0,calc(34px + var(--py,0px)),0) rotateY(-5deg);z-index:1;}
+.portfolio-bento--flyers .p-tile:nth-child(3){transform:translate3d(0,calc(-24px + var(--py,0px)),0) rotateY(-7deg);z-index:1;}
+.portfolio-bento--flyers .p-tile.has-img img{object-fit:cover;}
+.portfolio-bento--flyers .p-tile.has-img span{
+  position:absolute;left:10px;right:10px;bottom:10px;width:max-content;max-width:calc(100% - 20px);
+  margin:0;background:rgba(8,14,34,.82);color:#fff;border:1px solid rgba(255,255,255,.25);
+  backdrop-filter:blur(8px);font-size:.72rem;letter-spacing:.02em;
+}
+.portfolio-bento--flyers[data-parallax] .p-tile{transition:box-shadow .25s ease,border-color .25s ease;}
+.portfolio-bento--flyers .p-tile:hover{box-shadow:0 32px 58px -22px rgba(10,15,35,.65);border-color:rgba(255,255,255,.65);}
+@media(max-width:640px){
+  .portfolio-bento--flyers{grid-template-columns:1fr 1fr;gap:12px;padding:8px 2% 22px;}
+  .portfolio-bento--flyers .p-tile:nth-child(1){grid-column:1/-1;width:72%;justify-self:center;aspect-ratio:3/4;}
+  .portfolio-bento--flyers .p-tile:nth-child(2){transform:translate3d(0,calc(8px + var(--py,0px)),0) rotateY(-3deg);}
+  .portfolio-bento--flyers .p-tile:nth-child(3){transform:translate3d(0,calc(-8px + var(--py,0px)),0) rotateY(3deg);}
+  .portfolio-bento--flyers .p-tile.has-img span{font-size:.62rem;bottom:7px;left:7px;right:7px;padding:4px 8px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .portfolio-bento--flyers .p-tile{transform:none!important;}
+}
+
 /* Images et vidéos remplissent leurs cadres sans déformation */
 .portfolio-bento .p-tile.has-img{background:var(--paper);padding:0;align-items:flex-end;}
 .portfolio-bento .p-tile.has-img img,.portfolio-bento .p-tile.has-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
